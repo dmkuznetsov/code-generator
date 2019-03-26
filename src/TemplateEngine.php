@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Dm\CodeGenerator;
 
-use Dm\CodeGenerator\TemplateEngine\PhpTemplateEngine;
-use Dm\CodeGenerator\TemplateEngine\SimpleTemplateEngine;
+use Dm\CodeGenerator\Processor\CombinePhpClassProcessor;
+use Dm\CodeGenerator\Processor\SimpleProcessor;
 use Psr\Log\LoggerInterface;
 
 class TemplateEngine
@@ -14,19 +14,19 @@ class TemplateEngine
      */
     protected $logger;
     /**
-     * @var SimpleTemplateEngine
+     * @var SimpleProcessor
      */
     protected $simpleEngine;
     /**
-     * @var PhpTemplateEngine
+     * @var CombinePhpClassProcessor
      */
     protected $phpEngine;
 
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->simpleEngine = new SimpleTemplateEngine($logger);
-        $this->phpEngine = new PhpTemplateEngine($logger);
+        $this->simpleEngine = new SimpleProcessor($logger);
+        $this->phpEngine = new CombinePhpClassProcessor($logger);
     }
 
     /**

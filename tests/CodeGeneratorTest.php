@@ -8,6 +8,8 @@ use Dm\CodeGenerator\Configuration;
 use Dm\CodeGenerator\TemplateInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class CodeGeneratorTest extends TestCase
 {
@@ -24,6 +26,9 @@ class CodeGeneratorTest extends TestCase
      */
     protected $outputDir;
 
+    /**
+     * @throws \ReflectionException
+     */
     public function testScan(): void
     {
         $this->codeGenerator->scan();
@@ -40,10 +45,20 @@ class CodeGeneratorTest extends TestCase
         }
         ksort($actual);
 
-        $expected = [
-            $this->templatesDir.DIRECTORY_SEPARATOR.'index.php' => $this->outputDir.DIRECTORY_SEPARATOR.'index.php',
-            $this->templatesDir.DIRECTORY_SEPARATOR.'sub/sub.php' => $this->outputDir.DIRECTORY_SEPARATOR.'sub/sub.php',
+        $expected = [];
+        $expectedFiles = [
+            'src/Application/_CG_MODULE_/Assembler/Assembler.php' => 'src/Application/MyFavourite/Assembler/Assembler.php',
+            'src/Application/_CG_MODULE_/Assembler/AssemblerInterface.php' => 'src/Application/MyFavourite/Assembler/AssemblerInterface.php',
+            'src/Application/_CG_MODULE_/Dto/Dto.php' => 'src/Application/MyFavourite/Dto/Dto.php',
+            'src/Application/_CG_MODULE_/Service.php' => 'src/Application/MyFavourite/Service.php',
+            'src/UI/_CG_MODULE_/Form/Form.php' => 'src/UI/MyFavourite/Form/Form.php',
+            'src/UI/_CG_MODULE_/Model/RequestModel.php' => 'src/UI/MyFavourite/Model/RequestModel.php',
+            'src/UI/_CG_MODULE_Controller.php' => 'src/UI/MyFavouriteController.php',
+            'tests/api/v1/_CG_MODULE_Cest.php' => 'tests/api/v1/MyFavouriteCest.php',
         ];
+        foreach ($expectedFiles as $templatePath => $outputPath) {
+            $expected[$this->templatesDir . DIRECTORY_SEPARATOR . $templatePath] = $this->outputDir . DIRECTORY_SEPARATOR . $outputPath;
+        }
         $this->assertSame($expected, $actual);
     }
 
@@ -56,9 +71,29 @@ class CodeGeneratorTest extends TestCase
     protected function setUp(): void
     {
         $logger = new NullLogger();
-        $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'fixtures';
-        $this->outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg';
-        $configuration = new Configuration($logger, $this->templatesDir, $this->outputDir, []);
+        $this->templatesDir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
+        $this->outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cg';
+        $configuration = new Configuration($logger, $this->templatesDir, $this->outputDir,
+            ['_CG_MODULE_' => 'MyFavourite']);
         $this->codeGenerator = new CodeGenerator($configuration);
+    }
+
+    protected function tearDown()
+    {
+        if (!is_dir($this->outputDir)) {
+            return;
+        }
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->outputDir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($files as $fileInfo) {
+            $todo = ($fileInfo->isDir() ? 'rmdir' : 'unlink');
+            $todo($fileInfo->getRealPath());
+        }
+
+        rmdir($this->outputDir);
     }
 }

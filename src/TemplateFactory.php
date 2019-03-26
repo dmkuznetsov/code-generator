@@ -56,6 +56,9 @@ class TemplateFactory
             $this->configuration->getTemplateVars()
         );
 
+        $outputDir = str_replace(array_keys($data), array_values($data), $outputDir);
+        $outputFilename = str_replace(array_keys($data), array_values($data), $outputFilename);
+
         return new Template(
             $this->configuration->getTemplatesDir().DIRECTORY_SEPARATOR.$this->getSuffix(
                 $templatePath,

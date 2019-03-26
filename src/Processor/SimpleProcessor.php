@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator\TemplateEngine;
+namespace Dm\CodeGenerator\Processor;
 
-use Dm\CodeGenerator\TemplateEngineInterface;
+use Dm\CodeGenerator\ProcessorInterface;
 use Psr\Log\LoggerInterface;
 
-class SimpleTemplateEngine implements TemplateEngineInterface
+class SimpleProcessor implements ProcessorInterface
 {
     /**
      * @var LoggerInterface

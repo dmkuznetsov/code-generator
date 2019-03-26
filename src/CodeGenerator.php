@@ -68,8 +68,7 @@ class CodeGenerator
     public function generate(): void
     {
         foreach ($this->templates as $template) {
-            $source = file_get_contents($template->getTemplatePath());
-            $content = $this->templateEngine->render($source, $template->getTemplateVars());
+            $content = $this->templateEngine->render($template);
             $this->save($template->getOutputDir(), $content);
         }
     }

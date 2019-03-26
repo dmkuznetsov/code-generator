@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Dm\CodeGenerator;
 
-interface TemplateEngineInterface
+interface ProcessorInterface
 {
     /**
      * @param string $source
