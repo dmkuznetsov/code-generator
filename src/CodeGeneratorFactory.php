@@ -9,7 +9,7 @@ class CodeGeneratorFactory
      * @param ConfigurationInterface $configuration
      * @return CodeGenerator
      */
-    public function create(ConfigurationInterface $configuration): CodeGenerator
+    public static function create(ConfigurationInterface $configuration): CodeGenerator
     {
         $templateFactory = new TemplateFactory($configuration);
         $templateEngine = new TemplateEngine($configuration->getLogger());
