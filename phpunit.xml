@@ -1,0 +1,23 @@
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.0/phpunit.xsd"
+        backupGlobals="true"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        verbose="true">
+    <testsuites>
+        <testsuite name="Code Generator Test Suite">
+            <directory suffix="Test.php" phpVersion="7.1.0" phpVersionOperator=">=">tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix="Test.php">tests</directory>
+            <exclude>
+                <directory suffix=".php">tests/fixtures</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

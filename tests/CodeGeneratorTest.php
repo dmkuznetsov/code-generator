@@ -56,7 +56,7 @@ class CodeGeneratorTest extends TestCase
     protected function setUp(): void
     {
         $logger = new NullLogger();
-        $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'templates';
+        $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'fixtures';
         $this->outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg';
         $configuration = new Configuration($logger, $this->templatesDir, $this->outputDir, []);
         $this->codeGenerator = new CodeGenerator($configuration);
