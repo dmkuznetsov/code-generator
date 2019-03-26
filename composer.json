@@ -1,0 +1,26 @@
+{
+    "name": "dmkuznetsov/code-generator",
+    "description": "PHP code generator",
+    "type": "library",
+    "require": {
+        "php": "^7.1",
+        "nikic/php-parser": "^4.2",
+        "psr/log": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "monolog/monolog": "^1.24"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Kuznetsov",
+            "email": "d@kuznetsov.io"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dm\\CodeGenerator\\": "src/"
+        }
+    }
+}
