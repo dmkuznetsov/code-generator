@@ -8,6 +8,7 @@ use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
 use Dm\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
 use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
+use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
 use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Dm\CodeGenerator\ProcessorInterface;
 use PhpParser\Node\Stmt;
@@ -52,10 +53,10 @@ class PhpClassProcessor implements ProcessorInterface
 
         $originStmts = $this->parser->parse($originSource);
         $templateStmts = $this->parser->parse($templateSource);
-        $this->checkNamespace($originStmts, $templateStmts);
 
         $resultStmts = $originStmts;
 //        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
+        $resultStmts = (new UpdateNamespaceStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
         $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
         $originClass = $this->getClassStatement($resultStmts);
         if ($originClass) {
@@ -71,34 +72,5 @@ class PhpClassProcessor implements ProcessorInterface
         }
 
         return "<?php\n".$this->printer->prettyPrint($resultStmts);
-    }
-
-    /**
-     * @param Stmt[] $originStmts
-     * @param Stmt[] $templateStmts
-     * @return void
-     * @throws NotEqualNamespaceException
-     */
-    protected function checkNamespace(array $originStmts, array $templateStmts): void
-    {
-        $func = function (array $stmts): ?string {
-            $result = null;
-            foreach ($stmts as $stmt) {
-                if ($stmt instanceof Namespace_) {
-                    $result = $stmt->name->toString();
-                    break;
-                }
-            }
-
-            return $result;
-        };
-        $originNamespace = $func($originStmts);
-        $templateNamespace = $func($templateStmts);
-
-        if ($originNamespace !== $templateNamespace) {
-            throw new NotEqualNamespaceException(
-                sprintf('Origin namespace "%s" not equal to "%s"', $originNamespace, $templateNamespace)
-            );
-        }
     }
 }
