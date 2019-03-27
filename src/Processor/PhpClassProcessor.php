@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Dm\CodeGenerator\Processor;
 
-use Dm\CodeGenerator\Exception\NotEqualClassnameException;
+use Dm\CodeGenerator\Exception\ConflictClassnameException;
 use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
+use Dm\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
+use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
+use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Dm\CodeGenerator\ProcessorInterface;
 use PhpParser\Node\Stmt;
@@ -16,6 +19,8 @@ use PhpParser\Parser;
 
 class PhpClassProcessor implements ProcessorInterface
 {
+    use GetClassTrait;
+
     /**
      * @var LoggerInterface
      */
@@ -48,11 +53,14 @@ class PhpClassProcessor implements ProcessorInterface
         $originStmts = $this->parser->parse($originSource);
         $templateStmts = $this->parser->parse($templateSource);
         $this->checkNamespace($originStmts, $templateStmts);
-        $this->checkClassname($originStmts, $templateStmts);
 
         $resultStmts = $originStmts;
 //        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
         $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+        $originClass = $this->getClassStatement($resultStmts);
+        if ($originClass) {
+            $resultStmts = (new UpdateClassStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+            $resultStmts = (new UpdateExtendsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateExtends($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateImplements($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstants($resultStmts, $templateStmts);
@@ -60,8 +68,9 @@ class PhpClassProcessor implements ProcessorInterface
 //        $resultStmts = $this->updateProperties($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstructor($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateMethods($resultStmts, $templateStmts);
+        }
 
-        return "<?php\n" . $this->printer->prettyPrint($resultStmts);
+        return "<?php\n".$this->printer->prettyPrint($resultStmts);
     }
 
     /**
@@ -89,44 +98,6 @@ class PhpClassProcessor implements ProcessorInterface
         if ($originNamespace !== $templateNamespace) {
             throw new NotEqualNamespaceException(
                 sprintf('Origin namespace "%s" not equal to "%s"', $originNamespace, $templateNamespace)
-            );
-        }
-    }
-
-    /**
-     * @param Stmt[] $originStmts
-     * @param Stmt[] $templateStmts
-     * @return void
-     * @throws NotEqualClassnameException
-     */
-    protected function checkClassname(array $originStmts, array $templateStmts): void
-    {
-        $func = function (array $stmts): ?string {
-            $result = null;
-            foreach ($stmts as $stmt) {
-                if ($stmt instanceof Class_) {
-                    $result = $stmt->name->toString();
-                    break;
-                }
-
-                if ($stmt instanceof Namespace_) {
-                    foreach ($stmt->stmts as $item) {
-                        if ($item instanceof Class_) {
-                            $result = $item->name->toString();
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return $result;
-        };
-        $originClassname = $func($originStmts);
-        $templateClassname = $func($templateStmts);
-
-        if ($originClassname !== $templateClassname) {
-            throw new NotEqualClassnameException(
-                sprintf('Origin classname "%s" not equal to "%s"', $originClassname, $templateClassname)
             );
         }
     }

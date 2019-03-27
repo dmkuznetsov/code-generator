@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Dm\Tests\CodeGenerator\Processor;
 
-use Dm\CodeGenerator\Exception\NotEqualClassnameException;
+use Dm\CodeGenerator\Exception\ConflictClassnameException;
 use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
 use Dm\CodeGenerator\Processor\PhpClassProcessor;
 use PhpParser\ParserFactory;
@@ -75,7 +75,7 @@ PHP;
 
     public function testClassnameNotEqual(): void
     {
-        $this->expectException(NotEqualClassnameException::class);
+        $this->expectException(ConflictClassnameException::class);
 
         $originSource = <<<'PHP'
 <?php
@@ -98,7 +98,7 @@ PHP;
 
     public function testClassnameNotEqualWithoutNamespace(): void
     {
-        $this->expectException(NotEqualClassnameException::class);
+        $this->expectException(ConflictClassnameException::class);
 
         $originSource = <<<'PHP'
 <?php
@@ -111,48 +111,6 @@ PHP;
 <?php
 
 class DifferentClassname {}
-
-PHP;
-
-        $this->processor->process($originSource, $templateSource);
-    }
-
-    public function testClassnameEmptyOrigin(): void
-    {
-        $this->expectException(NotEqualClassnameException::class);
-
-        $originSource = <<<'PHP'
-<?php
-namespace App;
-
-PHP;
-
-        $templateSource = <<<'PHP'
-<?php
-namespace App;
-
-class DifferentClassname {}
-
-PHP;
-
-        $this->processor->process($originSource, $templateSource);
-    }
-
-    public function testClassnameEmptyTemplate(): void
-    {
-        $this->expectException(NotEqualClassnameException::class);
-
-        $originSource = <<<'PHP'
-<?php
-namespace App;
-
-class OriginClassname {}
-
-PHP;
-
-        $templateSource = <<<'PHP'
-<?php
-namespace App;
 
 PHP;
 
