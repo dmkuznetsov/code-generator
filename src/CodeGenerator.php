@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Dm\CodeGenerator;
 
-use PhpParser\ParserFactory;
+use Dm\CodeGenerator\Exception\ProcessorException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -18,10 +18,6 @@ class CodeGenerator
      */
     protected $templates;
     /**
-     * @var TemplateEngine
-     */
-    protected $templateEngine;
-    /**
      * @var TemplateFactory
      */
     protected $templateFactory;
@@ -30,7 +26,6 @@ class CodeGenerator
     {
         $this->configuration = $configuration;
         $this->templateFactory = new TemplateFactory($configuration);
-        $this->templateEngine = new TemplateEngine($configuration->getLogger());
     }
 
     /**
@@ -63,13 +58,21 @@ class CodeGenerator
     }
 
     /**
+     * @param ProcessorInterface[] $processors
      * @throws CodeGeneratorException
      */
-    public function generate(): void
+    public function generate(array $processors): void
     {
-        foreach ($this->templates as $template) {
-            $content = $this->templateEngine->render($template);
-            $this->save($template->getOutputDir(), $content);
+        foreach ($processors as $processor) {
+            if (!$processor instanceof ProcessorInterface) {
+                throw new ProcessorException(
+                    sprintf('Only ProcessorException is supported. %s given', get_class($processor))
+                );
+            }
+            foreach ($this->templates as $template) {
+                $content = $this->templateEngine->render($template);
+                $this->save($template->getOutputDir(), $content);
+            }
         }
     }
 
