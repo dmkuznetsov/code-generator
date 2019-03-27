@@ -5,16 +5,16 @@ namespace Dm\Tests\CodeGenerator\Processor;
 
 use Dm\CodeGenerator\Exception\NotEqualClassnameException;
 use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
-use Dm\CodeGenerator\Processor\CombinePhpClassProcessor;
+use Dm\CodeGenerator\Processor\PhpClassProcessor;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class CombinePhpClassProcessorTest extends TestCase
+class PhpClassProcessorTest extends TestCase
 {
     /**
-     * @var CombinePhpClassProcessor
+     * @var PhpClassProcessor
      */
     protected $processor;
 
@@ -239,11 +239,55 @@ PHP;
         $this->assertEquals($expectedSource, $actualSource);
     }
 
+    public function testUpdateUseStatementsCombineUses(): void
+    {
+        $originSource = <<<'PHP'
+<?php
+namespace App;
+
+use App\OriginException;
+use App\Exception;
+use App\RuntimeException;
+class Classname
+{
+}
+PHP;
+
+        $templateSource = <<<'PHP'
+<?php
+namespace App;
+
+use App\Exception;
+use App\TemplateException;
+use App\RuntimeException;
+use App\DomainException;
+class Classname
+{
+}
+PHP;
+
+        $expectedSource = <<<'PHP'
+<?php
+namespace App;
+
+use App\DomainException;
+use App\TemplateException;
+use App\OriginException;
+use App\Exception;
+use App\RuntimeException;
+class Classname
+{
+}
+PHP;
+        $actualSource = $this->processor->process($originSource, $templateSource);
+        $this->assertEquals($expectedSource, $actualSource);
+    }
+
     protected function setUp(): void
     {
         $logger = new NullLogger();
         $printer = new PrettyPrinter\Standard();
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
-        $this->processor = new CombinePhpClassProcessor($logger, $parser, $printer);
+        $this->processor = new PhpClassProcessor($logger, $parser, $printer);
     }
 }

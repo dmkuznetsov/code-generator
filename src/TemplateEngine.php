@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Dm\CodeGenerator;
 
-use Dm\CodeGenerator\Processor\CombinePhpClassProcessor;
+use Dm\CodeGenerator\Processor\PhpClassProcessor;
 use Dm\CodeGenerator\Processor\SimpleProcessor;
 use Psr\Log\LoggerInterface;
 
@@ -18,7 +18,7 @@ class TemplateEngine
      */
     protected $simpleEngine;
     /**
-     * @var CombinePhpClassProcessor
+     * @var PhpClassProcessor
      */
     protected $phpEngine;
 
@@ -26,7 +26,7 @@ class TemplateEngine
     {
         $this->logger = $logger;
         $this->simpleEngine = new SimpleProcessor($logger);
-        $this->phpEngine = new CombinePhpClassProcessor($logger);
+        $this->phpEngine = new PhpClassProcessor($logger);
     }
 
     /**

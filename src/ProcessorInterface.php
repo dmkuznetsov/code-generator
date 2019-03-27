@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace Dm\CodeGenerator;
 
+use Dm\CodeGenerator\Exception\ProcessorException;
+
 interface ProcessorInterface
 {
     /**
-     * @param string $source
+     * @param string $originSource
+     * @param string $templateSource
      * @param array $templateVars
+     * @throws ProcessorException
      * @return string
      */
-    public function render(string $source, array $templateVars): string;
+    public function process(string $originSource, string $templateSource, array $templateVars = []): string;
 }

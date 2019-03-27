@@ -78,7 +78,7 @@ class CodeGeneratorTest extends TestCase
         $this->codeGenerator = new CodeGenerator($configuration);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (!is_dir($this->outputDir)) {
             return;

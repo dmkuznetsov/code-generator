@@ -5,24 +5,16 @@ namespace Dm\CodeGenerator\Processor;
 
 use Dm\CodeGenerator\Exception\NotEqualClassnameException;
 use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
-use Dm\CodeGenerator\Exception\ProcessorException;
+use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Dm\CodeGenerator\ProcessorInterface;
-use PhpParser\BuilderFactory;
 use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\ClassConst;
-use PhpParser\Node\Stmt\Property;
-use PhpParser\Node\Stmt\Trait_;
-use PhpParser\Node\Stmt\Use_;
-use PhpParser\PrettyPrinter;
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinterAbstract;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
 
-class CombinePhpClassProcessor // implements ProcessorInterface
+class PhpClassProcessor implements ProcessorInterface
 {
     /**
      * @var LoggerInterface
@@ -45,12 +37,9 @@ class CombinePhpClassProcessor // implements ProcessorInterface
     }
 
     /**
-     * @param string $originSource
-     * @param string $templateSource
-     * @return string
-     * @throws ProcessorException
+     * @inheritdoc
      */
-    public function process(string $originSource, string $templateSource): string
+    public function process(string $originSource, string $templateSource, array $templateVars = []): string
     {
         if (empty($originSource)) {
             return $templateSource;
@@ -60,7 +49,17 @@ class CombinePhpClassProcessor // implements ProcessorInterface
         $templateStmts = $this->parser->parse($templateSource);
         $this->checkNamespace($originStmts, $templateStmts);
         $this->checkClassname($originStmts, $templateStmts);
-        $resultStmts = $this->updateUseStatements($originStmts, $templateStmts);
+
+        $resultStmts = $originStmts;
+//        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
+        $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateExtends($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateImplements($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateConstants($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateTraits($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateProperties($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateConstructor($resultStmts, $templateStmts);
+//        $resultStmts = $this->updateMethods($resultStmts, $templateStmts);
 
         return "<?php\n" . $this->printer->prettyPrint($resultStmts);
     }
@@ -130,62 +129,5 @@ class CombinePhpClassProcessor // implements ProcessorInterface
                 sprintf('Origin classname "%s" not equal to "%s"', $originClassname, $templateClassname)
             );
         }
-    }
-
-    /**
-     * @param Stmt[] $originStmts
-     * @param Stmt[] $templateStmts
-     * @return Stmt[]
-     */
-    protected function updateUseStatements(array $originStmts, array $templateStmts): array
-    {
-        $func = function (array $stmts): array {
-            $result = [];
-            foreach ($stmts as $stmt) {
-                if ($stmt instanceof Use_) {
-                    $result[] = $stmt;
-                }
-                if ($stmt instanceof Namespace_) {
-                    foreach ($stmt->stmts as $item) {
-                        if ($item instanceof Use_) {
-                            $result[] = $item;
-                        }
-                    }
-                }
-            }
-
-            return $result;
-        };
-
-        $originUses = $func($originStmts);
-        $templateUses = $func($templateStmts);
-
-        if (!count($templateUses)) {
-            return $originStmts;
-        }
-
-        $result = $originStmts;
-        $namespace = null;
-        foreach ($result as $stmt) {
-            if ($stmt instanceof Namespace_) {
-                $namespace = $stmt;
-                break;
-            }
-        }
-        if (null !== $namespace) {
-            $place = &$namespace->stmts;
-        } else {
-            $place = &$result->stmts;
-        }
-
-        if (!count($originUses)) {
-            foreach ($templateUses as $stmt) {
-                array_unshift($place, $stmt);
-            }
-        } else {
-
-        }
-
-        return $result;
     }
 }

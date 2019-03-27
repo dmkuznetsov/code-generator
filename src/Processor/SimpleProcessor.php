@@ -19,14 +19,13 @@ class SimpleProcessor implements ProcessorInterface
     }
 
     /**
-     * @param string $source
-     * @param array $templateVars
-     * @return string
+     * @inheritdoc
      */
-    public function render(string $source, array $templateVars): string
+    public function process(string $originSource, string $templateSource, array $templateVars = []): string
     {
         $search = array_keys($templateVars);
         $replace = array_values($templateVars);
-        return str_replace($search, $replace, $source);
+
+        return str_replace($search, $replace, $templateSource);
     }
 }
