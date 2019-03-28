@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator;
+namespace Octava\CodeGenerator;
 
-use Dm\CodeGenerator\Exception\ProcessorException;
+use Octava\CodeGenerator\Exception\ProcessorException;
 
 interface ProcessorInterface
 {

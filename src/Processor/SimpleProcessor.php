@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator\Processor;
+namespace Octava\CodeGenerator\Processor;
 
-use Dm\CodeGenerator\ProcessorInterface;
+use Octava\CodeGenerator\ProcessorInterface;
 use Psr\Log\LoggerInterface;
 
 class SimpleProcessor implements ProcessorInterface

@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator;
+namespace Octava\CodeGenerator;
 
-use Dm\CodeGenerator\Exception\ProcessorException;
+use Octava\CodeGenerator\Exception\ProcessorException;
+use Octava\CodeGenerator\Exception\WriterException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -13,10 +14,6 @@ class CodeGenerator
      * @var ConfigurationInterface
      */
     protected $configuration;
-    /**
-     * @var TemplateInterface[]
-     */
-    protected $templates;
     /**
      * @var TemplateFactory
      */
@@ -30,64 +27,56 @@ class CodeGenerator
 
     /**
      * Scan templates folder
+     * @return TemplateInterface[]
      */
-    public function scan(): void
+    public function scan(): array
     {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->configuration->getTemplatesDir())
         );
 
+        $templates = [];
         /** @var \SplFileInfo $file */
         foreach ($iterator as $file) {
             if (!$file->isDir()) {
-                $template = $this->templateFactory->create($file->getPathname());
-                $this->addTemplate($template);
+                $templates[] = $this->templateFactory->create($file->getPathname());
             }
         }
+
+        return $templates;
     }
 
     /**
-     * @param TemplateInterface $template
-     * @return $this
-     */
-    public function addTemplate(TemplateInterface $template): self
-    {
-        $this->templates[] = $template;
-
-        return $this;
-    }
-
-    /**
-     * @param ProcessorInterface[] $processors
+     * @param ProcessorInterface $processor
+     * @param TemplateInterface[] $templates
      * @throws CodeGeneratorException
+     * @throws ProcessorException
+     * @throws WriterException
      */
-    public function generate(array $processors): void
+    public function generate(ProcessorInterface $processor, array $templates): void
     {
-        foreach ($processors as $processor) {
-            if (!$processor instanceof ProcessorInterface) {
-                throw new ProcessorException(
-                    sprintf('Only ProcessorException is supported. %s given', get_class($processor))
+        foreach ($templates as $template) {
+            if (!$template instanceof TemplateInterface) {
+                throw new CodeGeneratorException(
+                    sprintf('Template must be instance of TemplateInterface, %s given', get_class($template))
                 );
             }
-            foreach ($this->templates as $template) {
-                $content = $this->templateEngine->render($template);
-                $this->save($template->getOutputDir(), $content);
+
+            if (!file_exists($template->getOutputPath())) {
+                $originSource = '';
+            } else {
+                $originSource = file_get_contents($template->getOutputPath());
             }
-        }
-    }
+            $templateSource = file_get_contents($template->getTemplatePath());
+            $templateVars = $template->getTemplateVars();
 
-    /**
-     * @param string $filepath
-     * @param string $content
-     * @throws CodeGeneratorException
-     */
-    protected function save(string $filepath, string $content): void
-    {
-        $dir = pathinfo($filepath, PATHINFO_DIRNAME);
-        if (!is_dir($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
-            throw new CodeGeneratorException(sprintf('Directory "%s" was not created', $dir));
+            $result = $processor->process($originSource, $templateSource, $templateVars);
+            $this->configuration
+                ->getWriter()
+                ->write(
+                    $template->getOutputDir().DIRECTORY_SEPARATOR.$template->getOutputFilename(),
+                    $result
+                );
         }
-
-        file_put_contents($filepath, $content);
     }
 }

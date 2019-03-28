@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator;
+namespace Octava\CodeGenerator;
 
 interface TemplateInterface
 {
@@ -19,6 +19,11 @@ interface TemplateInterface
      * @return string
      */
     public function getOutputFilename(): string;
+
+    /**
+     * @return string
+     */
+    public function getOutputPath(): string;
 
     /**
      * @return array

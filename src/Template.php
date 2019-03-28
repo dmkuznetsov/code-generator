@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator;
+namespace Octava\CodeGenerator;
 
 class Template implements TemplateInterface
 {
@@ -26,13 +26,14 @@ class Template implements TemplateInterface
         string $templatePath,
         string $outputDir,
         string $outputFilename,
-        array $templateVars)
-    {
+        array $templateVars
+    ) {
         $this->templatePath = $templatePath;
         $this->outputDir = $outputDir;
         $this->outputFilename = $outputFilename;
         $this->templateVars = $templateVars;
     }
+
     /**
      * @return string
      */
@@ -42,19 +43,27 @@ class Template implements TemplateInterface
     }
 
     /**
-     * @return string
-     */
-    public function getOutputDir(): string
-    {
-        return $this->outputDir;
-    }
-
-    /**
      * @return array
      */
     public function getTemplateVars(): array
     {
         return $this->templateVars;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputPath(): string
+    {
+        return $this->getOutputDir().DIRECTORY_SEPARATOR.$this->getOutputFilename();
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputDir(): string
+    {
+        return $this->outputDir;
     }
 
     /**

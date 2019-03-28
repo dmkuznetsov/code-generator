@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator\Exception;
+namespace Octava\CodeGenerator\Exception;
 
 class NotEqualNamespaceException extends ProcessorException
 {

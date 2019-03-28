@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\Tests\CodeGenerator\Processor\PhpClassProcessor;
+namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Dm\CodeGenerator\Exception\ConflictClassExtendsException;
-use Dm\CodeGenerator\Exception\ConflictClassnameException;
-use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
+use Octava\CodeGenerator\Exception\ConflictClassExtendsException;
+use Octava\CodeGenerator\Exception\ConflictClassnameException;
+use Octava\CodeGenerator\Exception\NotEqualNamespaceException;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter;

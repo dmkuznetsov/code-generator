@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\Tests\CodeGenerator\Processor\PhpClassProcessor;
+namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter;

@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator\Processor;
+namespace Octava\CodeGenerator\Processor;
 
-use Dm\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
-use Dm\CodeGenerator\ProcessorInterface;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
+use Octava\CodeGenerator\ProcessorInterface;
 use PhpParser\PrettyPrinterAbstract;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
@@ -50,11 +50,11 @@ class PhpClassProcessor implements ProcessorInterface
         $templateStmts = $this->parser->parse($templateSource);
 
         $resultStmts = $originStmts;
-//        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
-        $resultStmts = (new UpdateNamespaceStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
-        $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
         $originClass = $this->getClassStatement($resultStmts);
         if ($originClass) {
+//        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
+            $resultStmts = (new UpdateNamespaceStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+            $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateClassStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateExtendsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateExtends($resultStmts, $templateStmts);

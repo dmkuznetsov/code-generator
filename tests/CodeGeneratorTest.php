@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\Tests\CodeGenerator;
+namespace Octava\Tests\CodeGenerator;
 
-use Dm\CodeGenerator\CodeGenerator;
-use Dm\CodeGenerator\Configuration;
-use Dm\CodeGenerator\TemplateInterface;
+use Octava\CodeGenerator\CodeGenerator;
+use Octava\CodeGenerator\Configuration;
+use Octava\Tests\_data\TestWriter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use RecursiveDirectoryIterator;
@@ -26,22 +26,13 @@ class CodeGeneratorTest extends TestCase
      */
     protected $outputDir;
 
-    /**
-     * @throws \ReflectionException
-     */
     public function testScan(): void
     {
-        $this->codeGenerator->scan();
-        $reflection = new \ReflectionClass($this->codeGenerator);
-        $property = $reflection->getProperty('templates');
-        $property->setAccessible(true);
-        /** @var TemplateInterface[] $actualTemplates */
-        $actualTemplates = $property->getValue($this->codeGenerator);
-        $property->setAccessible(false);
-
+        $actualTemplates = $this->codeGenerator->scan();
         $actual = [];
         foreach ($actualTemplates as $template) {
-            $actual[$template->getTemplatePath()] = $template->getOutputDir() . DIRECTORY_SEPARATOR . $template->getOutputFilename();
+            $actual[$template->getTemplatePath()] = $template->getOutputDir(
+                ).DIRECTORY_SEPARATOR.$template->getOutputFilename();
         }
         ksort($actual);
 
@@ -57,24 +48,21 @@ class CodeGeneratorTest extends TestCase
             'tests/api/v1/_CG_MODULE_Cest.php' => 'tests/api/v1/MyFavouriteCest.php',
         ];
         foreach ($expectedFiles as $templatePath => $outputPath) {
-            $expected[$this->templatesDir . DIRECTORY_SEPARATOR . $templatePath] = $this->outputDir . DIRECTORY_SEPARATOR . $outputPath;
+            $expected[$this->templatesDir.DIRECTORY_SEPARATOR.$templatePath] = $this->outputDir.DIRECTORY_SEPARATOR.$outputPath;
         }
         $this->assertSame($expected, $actual);
     }
 
-//    public function testGenerate()
-//    {
-//        $this->codeGenerator->scan();
-//        $this->codeGenerator->generate();
-//    }
-
     protected function setUp(): void
     {
         $logger = new NullLogger();
-        $this->templatesDir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
-        $this->outputDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cg';
-        $configuration = new Configuration($logger, $this->templatesDir, $this->outputDir,
-            ['_CG_MODULE_' => 'MyFavourite']);
+        $writer = new TestWriter();
+        $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'_templates';
+        $this->outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg';
+        $configuration = new Configuration(
+            $logger, $writer, $this->templatesDir, $this->outputDir,
+            ['_CG_MODULE_' => 'MyFavourite']
+        );
         $this->codeGenerator = new CodeGenerator($configuration);
     }
 

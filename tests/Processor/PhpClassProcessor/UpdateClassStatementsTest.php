@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\Tests\CodeGenerator\Processor\PhpClassProcessor;
+namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Dm\CodeGenerator\Exception\ConflictClassExtendsException;
-use Dm\CodeGenerator\Exception\ConflictClassnameException;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
-use Dm\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
+use Octava\CodeGenerator\Exception\ConflictClassExtendsException;
+use Octava\CodeGenerator\Exception\ConflictClassnameException;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter;

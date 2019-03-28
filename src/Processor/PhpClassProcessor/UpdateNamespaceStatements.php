@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator\Processor\PhpClassProcessor;
+namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
-use Dm\CodeGenerator\Exception\NotEqualNamespaceException;
+use Octava\CodeGenerator\Exception\NotEqualNamespaceException;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use Psr\Log\LoggerInterface;

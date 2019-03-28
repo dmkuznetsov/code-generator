@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Dm\CodeGenerator\Processor\PhpClassProcessor;
+namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
-use Dm\CodeGenerator\Exception\ConflictClassnameException;
+use Octava\CodeGenerator\Exception\ConflictClassnameException;
 use PhpParser\Node\Stmt;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
