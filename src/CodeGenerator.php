@@ -22,14 +22,14 @@ class CodeGenerator
     public function __construct(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
-        $this->templateFactory = new TemplateFactory($configuration);
     }
 
     /**
      * Scan templates folder
+     * @param TemplateFactory $templateFactory
      * @return TemplateInterface[]
      */
-    public function scan(): array
+    public function scan(TemplateFactory $templateFactory): array
     {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->configuration->getTemplatesDir())
@@ -39,7 +39,7 @@ class CodeGenerator
         /** @var \SplFileInfo $file */
         foreach ($iterator as $file) {
             if (!$file->isDir()) {
-                $templates[] = $this->templateFactory->create($file->getPathname());
+                $templates[] = $templateFactory->create($file->getPathname());
             }
         }
 

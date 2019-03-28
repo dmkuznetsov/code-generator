@@ -5,6 +5,8 @@ namespace Octava\Tests\CodeGenerator;
 
 use Octava\CodeGenerator\CodeGenerator;
 use Octava\CodeGenerator\Configuration;
+use Octava\CodeGenerator\ConfigurationInterface;
+use Octava\CodeGenerator\TemplateFactory;
 use Octava\Tests\_data\TestWriter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -25,10 +27,14 @@ class CodeGeneratorTest extends TestCase
      * @var string
      */
     protected $outputDir;
+    /**
+     * @var ConfigurationInterface
+     */
+    protected $configuration;
 
     public function testScan(): void
     {
-        $actualTemplates = $this->codeGenerator->scan();
+        $actualTemplates = $this->codeGenerator->scan(new TemplateFactory($this->configuration));
         $actual = [];
         foreach ($actualTemplates as $template) {
             $actual[$template->getTemplatePath()] = $template->getOutputDir(
@@ -59,29 +65,29 @@ class CodeGeneratorTest extends TestCase
         $writer = new TestWriter();
         $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'_templates';
         $this->outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg';
-        $configuration = new Configuration(
+        $this->configuration = new Configuration(
             $logger, $writer, $this->templatesDir, $this->outputDir,
             ['_CG_MODULE_' => 'MyFavourite']
         );
-        $this->codeGenerator = new CodeGenerator($configuration);
+        $this->codeGenerator = new CodeGenerator($this->configuration);
     }
 
     protected function tearDown(): void
     {
-        if (!is_dir($this->outputDir)) {
-            return;
-        }
-
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->outputDir, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($files as $fileInfo) {
-            $todo = ($fileInfo->isDir() ? 'rmdir' : 'unlink');
-            $todo($fileInfo->getRealPath());
-        }
-
-        rmdir($this->outputDir);
+//        if (!is_dir($this->outputDir)) {
+//            return;
+//        }
+//
+//        $files = new RecursiveIteratorIterator(
+//            new RecursiveDirectoryIterator($this->outputDir, RecursiveDirectoryIterator::SKIP_DOTS),
+//            RecursiveIteratorIterator::CHILD_FIRST
+//        );
+//
+//        foreach ($files as $fileInfo) {
+//            $todo = ($fileInfo->isDir() ? 'rmdir' : 'unlink');
+//            $todo($fileInfo->getRealPath());
+//        }
+//
+//        rmdir($this->outputDir);
     }
 }
