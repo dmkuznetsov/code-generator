@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator;
 
-use Octava\CodeGenerator\Exception\ProcessorException;
-use Octava\CodeGenerator\Exception\WriterException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -14,10 +12,6 @@ class CodeGenerator
      * @var ConfigurationInterface
      */
     protected $configuration;
-    /**
-     * @var TemplateFactory
-     */
-    protected $templateFactory;
 
     public function __construct(ConfigurationInterface $configuration)
     {
@@ -39,6 +33,7 @@ class CodeGenerator
         /** @var \SplFileInfo $file */
         foreach ($iterator as $file) {
             if (!$file->isDir()) {
+                $this->configuration->getLogger()->debug(sprintf('[SCAN] Found %s', $file->getPathname()));
                 $templates[] = $templateFactory->create($file->getPathname());
             }
         }
@@ -47,36 +42,66 @@ class CodeGenerator
     }
 
     /**
-     * @param ProcessorInterface $processor
+     * @param CodeGeneratorStrategyInterface $strategy
      * @param TemplateInterface[] $templates
      * @throws CodeGeneratorException
-     * @throws ProcessorException
-     * @throws WriterException
      */
-    public function generate(ProcessorInterface $processor, array $templates): void
+    public function generate(CodeGeneratorStrategyInterface $strategy, array $templates): void
     {
+        $errors = [];
         foreach ($templates as $template) {
-            if (!$template instanceof TemplateInterface) {
-                throw new CodeGeneratorException(
-                    sprintf('Template must be instance of TemplateInterface, %s given', get_class($template))
-                );
-            }
+            try {
+                if (!$template instanceof TemplateInterface) {
+                    $this->configuration
+                        ->getLogger()
+                        ->emergency(
+                            sprintf(
+                                '[GENERATE] Template must be instance of TemplateInterface, %s given',
+                                get_class($template)
+                            )
+                        );
+                    throw new CodeGeneratorException(
+                        sprintf('Template must be instance of TemplateInterface, %s given', get_class($template))
+                    );
+                }
 
-            if (!file_exists($template->getOutputPath())) {
-                $originSource = '';
-            } else {
-                $originSource = file_get_contents($template->getOutputPath());
-            }
-            $templateSource = file_get_contents($template->getTemplatePath());
-            $templateVars = $template->getTemplateVars();
+                if (!file_exists($template->getTemplatePath())) {
+                    $this->configuration
+                        ->getLogger()
+                        ->emergency(sprintf('[GENERATE] Template %s not found', $template->getTemplatePath()));
+                    throw new CodeGeneratorException(
+                        sprintf('Template %s not found', $template->getTemplatePath())
+                    );
+                }
+                $this->configuration
+                    ->getLogger()
+                    ->debug(
+                        '[GENERATE] Start processing',
+                        [
+                            'output' => $template->getOutputPath(),
+                            'template' => $template->getOutputPath(),
+                            'vars' => $template->getTemplateVars(),
+                        ]
+                    );
 
-            $result = $processor->process($originSource, $templateSource, $templateVars);
-            $this->configuration
-                ->getWriter()
-                ->write(
-                    $template->getOutputDir().DIRECTORY_SEPARATOR.$template->getOutputFilename(),
-                    $result
-                );
+                $strategy->run($template);
+            } catch (CodeGeneratorException $e) {
+                $errors[] = $e->getMessage();
+                $this->configuration
+                    ->getLogger()
+                    ->error(
+                        sprintf('[GENERATE] Error processing: %s', $e->getMessage()),
+                        [
+                            'output' => $template->getOutputPath(),
+                            'template' => $template->getOutputPath(),
+                            'vars' => $template->getTemplateVars(),
+                        ]
+                    );
+            }
+        }
+
+        if (count($errors)) {
+            throw new CodeGeneratorException(sprintf("Found %d errors:\n- %s", count($errors), implode("\n- ", $errors)));
         }
     }
 }

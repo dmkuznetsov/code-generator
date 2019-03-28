@@ -59,6 +59,12 @@ class CodeGeneratorTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function _testGenerate(): void
+    {
+//        $actualTemplates = $this->codeGenerator->scan(new TemplateFactory($this->configuration));
+//        $this->codeGenerator->generate();
+    }
+
     protected function setUp(): void
     {
         $logger = new NullLogger();

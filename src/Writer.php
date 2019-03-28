@@ -5,7 +5,7 @@ namespace Octava\CodeGenerator;
 
 use Octava\CodeGenerator\Exception\WriterException;
 
-class WriterFilesystem implements WriterInterface
+class Writer implements WriterInterface
 {
     /**
      * @param string $filepath
