@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Exception\ConflictClassExtendsException;
+use Octava\CodeGenerator\Exception\ProcessorConflictClassExtendsException;
 use PhpParser\Node\Stmt;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
@@ -31,7 +31,7 @@ class UpdateExtendsStatements
      * @param Stmt[] $originStmts
      * @param Stmt[] $templateStmts
      * @return Stmt[]
-     * @throws ConflictClassExtendsException
+     * @throws ProcessorConflictClassExtendsException
      */
     public function __invoke(array $originStmts, array $templateStmts): array
     {
@@ -46,7 +46,7 @@ class UpdateExtendsStatements
             $originClass->extends = $templateClass->extends;
         } elseif ($templateClass->extends
             && $originClass->extends->toString() !== $templateClass->extends->toString()) {
-            throw new ConflictClassExtendsException(
+            throw new ProcessorConflictClassExtendsException(
                 sprintf(
                     'Parent class "%s" of "%s" conflicts with parent class "%s" of "%s"',
                     $templateClass->extends->toString(),

@@ -3,14 +3,8 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator;
 
-use Psr\Log\LoggerInterface;
-
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
     /**
      * @var string
      */
@@ -23,20 +17,12 @@ class Configuration implements ConfigurationInterface
      * @var array
      */
     protected $templateVars;
-    /**
-     * @var WriterInterface
-     */
-    protected $writer;
 
     public function __construct(
-        LoggerInterface $logger,
-        WriterInterface $writer,
         string $templatesDir,
         string $outputDir,
         array $templateVars = []
     ) {
-        $this->logger = $logger;
-        $this->writer = $writer;
         $this->templatesDir = rtrim(trim($templatesDir), DIRECTORY_SEPARATOR);
         $this->outputDir = rtrim(trim($outputDir), DIRECTORY_SEPARATOR);
         $this->templateVars = $templateVars;
@@ -56,23 +42,6 @@ class Configuration implements ConfigurationInterface
     public function getTemplateVars(): array
     {
         return $this->templateVars;
-    }
-
-    /**
-     * @return LoggerInterface
-     */
-    public function getLogger(): LoggerInterface
-    {
-        return $this->logger;
-    }
-
-
-    /**
-     * @return WriterInterface
-     */
-    public function getWriter(): WriterInterface
-    {
-        return $this->writer;
     }
 
     /**

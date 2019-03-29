@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Exception\ConflictClassExtendsException;
-use Octava\CodeGenerator\Exception\ConflictClassnameException;
+use Octava\CodeGenerator\Exception\ProcessorConflictClassExtendsException;
+use Octava\CodeGenerator\Exception\ProcessorConflictClassnameException;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use PhpParser\Parser;
@@ -123,7 +123,7 @@ PHP;
 
     public function testUpdateClassStatementsConflict(): void
     {
-        $this->expectException(ConflictClassnameException::class);
+        $this->expectException(ProcessorConflictClassnameException::class);
 
         $originSource = <<<'PHP'
 <?php

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Exception\NotEqualNamespaceException;
+use Octava\CodeGenerator\Exception\ProcessorNotEqualNamespaceException;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use Psr\Log\LoggerInterface;
@@ -32,7 +32,7 @@ class UpdateNamespaceStatements
      * @param Stmt[] $originStmts
      * @param Stmt[] $templateStmts
      * @return Stmt[]
-     * @throws NotEqualNamespaceException
+     * @throws ProcessorNotEqualNamespaceException
      */
     public function __invoke(array $originStmts, array $templateStmts): array
     {
@@ -51,7 +51,7 @@ class UpdateNamespaceStatements
         $templateNamespace = $func($templateStmts);
 
         if ($originNamespace !== $templateNamespace) {
-            throw new NotEqualNamespaceException(
+            throw new ProcessorNotEqualNamespaceException(
                 sprintf('Origin namespace "%s" not equal to "%s"', $originNamespace, $templateNamespace)
             );
         }

@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator\Exception;
 
-class ConflictClassnameException extends ProcessorException
+class ProcessorConflictClassnameException extends ProcessorException
 {
 }

@@ -9,9 +9,6 @@ use Octava\CodeGenerator\ConfigurationInterface;
 use Octava\CodeGenerator\TemplateFactory;
 use Octava\Tests\_data\TestWriter;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class CodeGeneratorTest extends TestCase
 {
@@ -67,15 +64,15 @@ class CodeGeneratorTest extends TestCase
 
     protected function setUp(): void
     {
-        $logger = new NullLogger();
         $writer = new TestWriter();
         $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'_templates';
         $this->outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg';
         $this->configuration = new Configuration(
-            $logger, $writer, $this->templatesDir, $this->outputDir,
+            $this->templatesDir,
+            $this->outputDir,
             ['_CG_MODULE_' => 'MyFavourite']
         );
-        $this->codeGenerator = new CodeGenerator($this->configuration);
+        $this->codeGenerator = new CodeGenerator($this->configuration, $writer);
     }
 
     protected function tearDown(): void

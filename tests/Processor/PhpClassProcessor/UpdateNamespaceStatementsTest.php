@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Exception\ConflictClassExtendsException;
-use Octava\CodeGenerator\Exception\ConflictClassnameException;
-use Octava\CodeGenerator\Exception\NotEqualNamespaceException;
+use Octava\CodeGenerator\Exception\ProcessorConflictClassExtendsException;
+use Octava\CodeGenerator\Exception\ProcessorConflictClassnameException;
+use Octava\CodeGenerator\Exception\ProcessorNotEqualNamespaceException;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
@@ -32,7 +32,7 @@ class UpdateNamespaceStatementsTest extends TestCase
 
     public function testNamespaceClassStatementsWithoutTemplateNamespace(): void
     {
-        $this->expectException(NotEqualNamespaceException::class);
+        $this->expectException(ProcessorNotEqualNamespaceException::class);
 
         $originSource = <<<'PHP'
 <?php
@@ -56,7 +56,7 @@ PHP;
 
     public function testNamespaceClassStatementsWithoutOriginClass(): void
     {
-        $this->expectException(NotEqualNamespaceException::class);
+        $this->expectException(ProcessorNotEqualNamespaceException::class);
 
         $originSource = <<<'PHP'
 <?php
@@ -113,7 +113,7 @@ PHP;
 
     public function testNamespaceClassStatementsConflict(): void
     {
-        $this->expectException(NotEqualNamespaceException::class);
+        $this->expectException(ProcessorNotEqualNamespaceException::class);
 
         $originSource = <<<'PHP'
 <?php

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Exception\ConflictClassnameException;
+use Octava\CodeGenerator\Exception\ProcessorConflictClassnameException;
 use PhpParser\Node\Stmt;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
@@ -31,7 +31,7 @@ class UpdateClassStatements
      * @param Stmt[] $originStmts
      * @param Stmt[] $templateStmts
      * @return Stmt[]
-     * @throws ConflictClassnameException
+     * @throws ProcessorConflictClassnameException
      */
     public function __invoke(array $originStmts, array $templateStmts): array
     {
@@ -47,7 +47,7 @@ class UpdateClassStatements
         }
 
         if ($originClass->name->toString() !== $templateClass->name->toString()) {
-            throw new ConflictClassnameException(
+            throw new ProcessorConflictClassnameException(
                 sprintf(
                     'Origin classname "%s" not equal to "%s"',
                     $originClass->name->toString(),
