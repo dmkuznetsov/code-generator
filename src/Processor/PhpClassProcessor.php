@@ -9,6 +9,7 @@ use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Octava\CodeGenerator\ProcessorInterface;
+use Octava\CodeGenerator\TemplateInterface;
 use PhpParser\PrettyPrinterAbstract;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
@@ -67,5 +68,16 @@ class PhpClassProcessor implements ProcessorInterface
         }
 
         return "<?php\n".$this->printer->prettyPrint($resultStmts);
+    }
+
+    /**
+     * @param TemplateInterface $template
+     * @return bool
+     */
+    public function canBeProcessed(TemplateInterface $template): bool
+    {
+        $ext = pathinfo($template->getOutputPath(), PATHINFO_EXTENSION);
+
+        return $ext === 'php';
     }
 }

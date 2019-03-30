@@ -15,4 +15,10 @@ interface ProcessorInterface
      * @return string
      */
     public function process(string $originSource, string $templateSource, array $templateVars = []): string;
+
+    /**
+     * @param TemplateInterface $template
+     * @return bool
+     */
+    public function canBeProcessed(TemplateInterface $template): bool;
 }

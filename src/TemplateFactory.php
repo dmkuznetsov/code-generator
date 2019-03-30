@@ -46,6 +46,8 @@ class TemplateFactory
         $data = array_replace(
             [
                 '_CG_FILE_NAME_' => $filename,
+                '_CG_FILE_NAME_UCFIRST_' => ucfirst($filename),
+                '_CG_FILE_NAME_LCFIRST_' => lcfirst($filename),
                 '_CG_FILE_BASENAME_' => $basename,
                 '_CG_FILE_DIR_' => $dir,
                 '_CG_FILE_PATH_' => $dir.DIRECTORY_SEPARATOR.$filename,
