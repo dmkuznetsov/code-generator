@@ -46,6 +46,8 @@ $processors = [
 $generator->generate($templates, $processors);
 ```
 
+Примеры шаблонов для генерации смотрите в папке `tests/_templates`.
+
 
 ### TODO
 

@@ -1,0 +1,60 @@
+#!/usr/bin/env php
+<?php
+
+foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        require $file;
+        break;
+    }
+}
+
+use Octava\CodeGenerator\CodeGenerator;
+use Octava\CodeGenerator\Configuration;
+use Octava\CodeGenerator\Writer;
+use Octava\CodeGenerator\Processor\PhpClassProcessor;
+use Octava\CodeGenerator\Processor\SimpleProcessor;
+use Octava\CodeGenerator\TemplateFactory;
+use PhpParser\ParserFactory;
+use PhpParser\PrettyPrinter\Standard;
+
+[$templatesPath, $destinationPath, $namespace] = parseArgs($argv);
+
+$configuration = new Configuration($templatesPath, $destinationPath);
+$generator = new CodeGenerator($configuration, new Writer());
+$templates = $generator->scan(new TemplateFactory($configuration));
+$processors = [
+    new SimpleProcessor(),
+    new PhpClassProcessor((new ParserFactory)->create(ParserFactory::PREFER_PHP7), new Standard())
+];
+$generator->generate($templates, $processors);
+
+function showHelp($error = '') {
+    if ($error) {
+        echo $error . "\n\n";
+    }
+    die(<<<OUTPUT
+Usage: generator path/to/templates path/to/destination [Namespace]
+Generate PHP code.
+
+OUTPUT
+    );
+}
+
+function parseArgs($args) {
+    if (count($args) < 3) {
+        showHelp('Invalid usage');
+    }
+
+    $templatesPath = $args[1];
+    $destinationPath = $args[2];
+    $namespace = $args[3] ?? null;
+
+    if (!is_dir($templatesPath)) {
+        showHelp(sprintf('Invalid TEMPLATES paths: %s', $templatesPath));
+    }
+    if (!is_dir($destinationPath)) {
+        showHelp(sprintf('DESTINATION path does not exists: %s', $destinationPath));
+    }
+
+    return [$templatesPath, $destinationPath, $namespace];
+}
