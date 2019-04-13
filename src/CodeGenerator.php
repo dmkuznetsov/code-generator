@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator;
 
-use Octava\CodeGenerator\Exception\ConflictException;
 use Octava\CodeGenerator\Exception\ProcessorException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -165,5 +164,7 @@ class CodeGenerator
 
         $this->logger->debug('[PROCESS] Write result to '.$template->getOutputPath());
         $this->writer->write($template->getOutputPath(), (string)($result || $templateSource));
+
+        return $result;
     }
 }

@@ -6,6 +6,7 @@ namespace Octava\CodeGenerator\Processor;
 use Octava\CodeGenerator\ProcessorInterface;
 use Octava\CodeGenerator\TemplateInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class SimpleProcessor implements ProcessorInterface
 {
@@ -14,9 +15,9 @@ class SimpleProcessor implements ProcessorInterface
      */
     protected $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger = null)
     {
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**

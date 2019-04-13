@@ -6,8 +6,12 @@ namespace Octava\Tests\CodeGenerator;
 use Octava\CodeGenerator\CodeGenerator;
 use Octava\CodeGenerator\Configuration;
 use Octava\CodeGenerator\ConfigurationInterface;
+use Octava\CodeGenerator\Processor\PhpClassProcessor;
+use Octava\CodeGenerator\Processor\SimpleProcessor;
 use Octava\CodeGenerator\TemplateFactory;
 use Octava\Tests\_data\TestWriter;
+use PhpParser\ParserFactory;
+use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 
 class CodeGeneratorTest extends TestCase
@@ -60,6 +64,20 @@ class CodeGeneratorTest extends TestCase
     {
 //        $actualTemplates = $this->codeGenerator->scan(new TemplateFactory($this->configuration));
 //        $this->codeGenerator->generate();
+        $configuration = new Configuration(
+            __DIR__.DIRECTORY_SEPARATOR.'_templates',
+            sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg'
+        );
+        $writer = new TestWriter();
+        $generator = new CodeGenerator($configuration, $writer);
+        $templates = $generator->scan(new TemplateFactory($this->configuration));
+        $printer = new Standard();
+        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $processors = [
+            new SimpleProcessor(),
+            new PhpClassProcessor($parser, $printer)
+        ];
+        $generator->generate($templates, $processors);
     }
 
     protected function setUp(): void

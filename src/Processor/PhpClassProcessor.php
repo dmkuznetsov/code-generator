@@ -13,6 +13,7 @@ use Octava\CodeGenerator\TemplateInterface;
 use PhpParser\PrettyPrinterAbstract;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
+use Psr\Log\NullLogger;
 
 class PhpClassProcessor implements ProcessorInterface
 {
@@ -31,11 +32,11 @@ class PhpClassProcessor implements ProcessorInterface
      */
     protected $printer;
 
-    public function __construct(LoggerInterface $logger, Parser $parser, PrettyPrinterAbstract $printer)
+    public function __construct(Parser $parser, PrettyPrinterAbstract $printer, LoggerInterface $logger = null)
     {
-        $this->logger = $logger;
         $this->parser = $parser;
         $this->printer = $printer;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -48,11 +49,10 @@ class PhpClassProcessor implements ProcessorInterface
         }
 
         $originStmts = $this->parser->parse($originSource);
-        $templateStmts = $this->parser->parse($templateSource);
-
         $resultStmts = $originStmts;
         $originClass = $this->getClassStatement($resultStmts);
         if ($originClass) {
+            $templateStmts = $this->parser->parse($templateSource);
 //        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
             $resultStmts = (new UpdateNamespaceStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
