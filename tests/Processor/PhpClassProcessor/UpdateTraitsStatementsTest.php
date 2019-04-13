@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateImplementsStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateTraitsStatements;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class UpdateImplementsStatementsTest extends TestCase
+class UpdateTraitsStatementsTest extends TestCase
 {
     /**
      * @var UpdateImplementsStatements
@@ -25,7 +26,7 @@ class UpdateImplementsStatementsTest extends TestCase
      */
     protected $printer;
 
-    public function testUpdateImplementsStatementsWithoutImplements(): void
+    public function testUpdateTraitsStatementsWithoutTemplateTraits(): void
     {
         $originSource = <<<'PHP'
 <?php
@@ -33,6 +34,8 @@ namespace App;
 
 class Classname
 {
+    use OriginTrait, ExtraOriginTrait;
+    use AdditionalOriginTrait;
 }
 PHP;
 
@@ -50,6 +53,8 @@ namespace App;
 
 class Classname
 {
+    use OriginTrait, ExtraOriginTrait;
+    use AdditionalOriginTrait;
 }
 PHP;
 
@@ -58,40 +63,7 @@ PHP;
         $this->assertEquals($expectedSource, $actualSource);
     }
 
-    public function testUpdateImplementsStatementsWithoutTemplateImplements(): void
-    {
-        $originSource = <<<'PHP'
-<?php
-namespace App;
-
-class Classname implements OriginInterface
-{
-}
-PHP;
-
-        $templateSource = <<<'PHP'
-<?php
-namespace App;
-
-class Classname
-{
-}
-PHP;
-
-        $expectedSource = <<<'PHP'
-namespace App;
-
-class Classname implements OriginInterface
-{
-}
-PHP;
-
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
-        $actualSource = $this->printer->prettyPrint($actualSourceStmts);
-        $this->assertEquals($expectedSource, $actualSource);
-    }
-
-    public function testUpdateImplementsStatementsWithoutOriginImplements(): void
+    public function testUpdateTraitsStatementsWithoutOriginTraits(): void
     {
         $originSource = <<<'PHP'
 <?php
@@ -106,16 +78,20 @@ PHP;
 <?php
 namespace App;
 
-class Classname implements TemplateImplements
+class Classname
 {
+    use TemplateTrait, ExtraTemplateTrait;
+    use AdditionalTemplateTrait;
 }
 PHP;
 
         $expectedSource = <<<'PHP'
 namespace App;
 
-class Classname implements TemplateImplements
+class Classname
 {
+    use TemplateTrait, ExtraTemplateTrait;
+    use AdditionalTemplateTrait;
 }
 PHP;
 
@@ -124,7 +100,7 @@ PHP;
         $this->assertEquals($expectedSource, $actualSource);
     }
 
-    public function testUpdateMultipleImplementsStatements(): void
+    public function testUpdateTraitsStatements(): void
     {
         $originSource = <<<'PHP'
 <?php
@@ -132,6 +108,8 @@ namespace App;
 
 class Classname
 {
+    use OriginTrait, ExtraOriginTrait;
+    use AdditionalOriginTrait, AdditionalTemplateTrait;
 }
 PHP;
 
@@ -139,16 +117,21 @@ PHP;
 <?php
 namespace App;
 
-class Classname implements TemplateImplements, OriginImplements
+class Classname
 {
+    use TemplateTrait, ExtraTemplateTrait;
+    use AdditionalTemplateTrait;
 }
 PHP;
 
         $expectedSource = <<<'PHP'
 namespace App;
 
-class Classname implements TemplateImplements, OriginImplements
+class Classname
 {
+    use TemplateTrait, ExtraTemplateTrait;
+    use OriginTrait, ExtraOriginTrait;
+    use AdditionalOriginTrait, AdditionalTemplateTrait;
 }
 PHP;
 
@@ -157,15 +140,17 @@ PHP;
         $this->assertEquals($expectedSource, $actualSource);
     }
 
-
-    public function testUpdateImplementsStatements(): void
+    public function testUpdateTraitsStatementsWithAlias(): void
     {
         $originSource = <<<'PHP'
 <?php
 namespace App;
 
-class Classname implements OriginInterface, BaseInterface
+class Classname
 {
+    use OriginTrait, ExtraOriginTrait;
+    use AdditionalOriginTrait, AdditionalTemplateTrait;
+    use HelloWorld { sayHello as protected; }
 }
 PHP;
 
@@ -173,16 +158,24 @@ PHP;
 <?php
 namespace App;
 
-class Classname implements TemplateInterface, BaseInterface, ExtraTemplateInterface
+class Classname
 {
+    use TemplateTrait, ExtraTemplateTrait;
+    use AdditionalTemplateTrait;
 }
 PHP;
 
         $expectedSource = <<<'PHP'
 namespace App;
 
-class Classname implements OriginInterface, BaseInterface, TemplateInterface, ExtraTemplateInterface
+class Classname
 {
+    use TemplateTrait, ExtraTemplateTrait;
+    use OriginTrait, ExtraOriginTrait;
+    use AdditionalOriginTrait, AdditionalTemplateTrait;
+    use HelloWorld {
+        sayHello as protected;
+    }
 }
 PHP;
 
@@ -197,6 +190,6 @@ PHP;
         $logger = new NullLogger();
         $this->printer = new PrettyPrinter\Standard();
         $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
-        $this->processor = new UpdateImplementsStatements($logger, $this->parser);
+        $this->processor = new UpdateTraitsStatements($logger, $this->parser);
     }
 }

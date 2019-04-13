@@ -6,7 +6,9 @@ namespace Octava\CodeGenerator\Processor;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateImplementsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateTraitsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Octava\CodeGenerator\ProcessorInterface;
 use Octava\CodeGenerator\TemplateInterface;
@@ -53,15 +55,13 @@ class PhpClassProcessor implements ProcessorInterface
         $originClass = $this->getClassStatement($resultStmts);
         if ($originClass) {
             $templateStmts = $this->parser->parse($templateSource);
-//        $resultStmts = $this->updateDefines($originStmts, $templateStmts);
             $resultStmts = (new UpdateNamespaceStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateUseStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateClassStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateExtendsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
-//        $resultStmts = $this->updateExtends($resultStmts, $templateStmts);
-//        $resultStmts = $this->updateImplements($resultStmts, $templateStmts);
+            $resultStmts = (new UpdateImplementsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+            $resultStmts = (new UpdateTraitsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstants($resultStmts, $templateStmts);
-//        $resultStmts = $this->updateTraits($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateProperties($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstructor($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateMethods($resultStmts, $templateStmts);
