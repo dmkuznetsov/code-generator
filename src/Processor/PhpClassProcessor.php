@@ -63,7 +63,6 @@ class PhpClassProcessor implements ProcessorInterface
             $resultStmts = (new UpdateImplementsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateConstStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateTraitsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
-//        $resultStmts = $this->updateConstants($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateProperties($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstructor($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateMethods($resultStmts, $templateStmts);

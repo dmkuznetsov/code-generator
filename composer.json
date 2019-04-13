@@ -1,5 +1,5 @@
 {
-    "name": "octava/code-generator",
+    "name": "octava/generator",
     "description": "PHP code generator",
     "keywords": [
         "codegenerator",
