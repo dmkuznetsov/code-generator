@@ -4,19 +4,19 @@ declare(strict_types=1);
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
 use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\TraitUse;
+use PhpParser\Node\Stmt\ClassConst;
 
-trait GetTraitTrait
+trait GetClassConstTrait
 {
     /**
      * @param Class_ $classStatement
-     * @return TraitUse[]
+     * @return ClassConst[]
      */
-    protected function &getTraitStatements(Class_ $classStatement): array
+    protected function &getClassConstStatements(Class_ $classStatement): array
     {
         $result = [];
         foreach ($classStatement->stmts as $stmt) {
-            if ($stmt instanceof TraitUse) {
+            if ($stmt instanceof ClassConst) {
                 $result[] = $stmt;
             }
         }

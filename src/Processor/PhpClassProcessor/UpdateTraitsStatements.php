@@ -41,12 +41,12 @@ class UpdateTraitsStatements
             return $originStmts;
         }
 
-        $templateTraits = $this->getTraitStatement($templateClass);
+        $templateTraits = $this->getTraitStatements($templateClass);
         if (!$templateTraits) {
             return $originStmts;
         }
 
-        $originTraits = $this->getTraitStatement($originClass);
+        $originTraits = $this->getTraitStatements($originClass);
         if (!$originTraits) {
             foreach (array_reverse($templateTraits) as $templateTrait) {
                 array_unshift($originClass->stmts, $templateTrait);

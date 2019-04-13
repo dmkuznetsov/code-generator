@@ -5,6 +5,7 @@ namespace Octava\CodeGenerator\Processor;
 
 use Octava\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateConstStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateImplementsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
@@ -60,6 +61,7 @@ class PhpClassProcessor implements ProcessorInterface
             $resultStmts = (new UpdateClassStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateExtendsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateImplementsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+            $resultStmts = (new UpdateConstStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateTraitsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstants($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateProperties($resultStmts, $templateStmts);

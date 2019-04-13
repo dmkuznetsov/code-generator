@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateImplementsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateTraitsStatements;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
@@ -14,7 +13,7 @@ use Psr\Log\NullLogger;
 class UpdateTraitsStatementsTest extends TestCase
 {
     /**
-     * @var UpdateImplementsStatements
+     * @var UpdateTraitsStatements
      */
     protected $processor;
     /**
