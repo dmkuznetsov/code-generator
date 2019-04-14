@@ -10,7 +10,7 @@ use PhpParser\Parser;
 
 class UpdateTraitsStatements
 {
-    use GetClassTrait, GetTraitTrait;
+    use GetClassTrait, GetTraitTrait, InsertStatementTrait;
 
     /**
      * @var LoggerInterface
@@ -51,6 +51,7 @@ class UpdateTraitsStatements
             foreach (array_reverse($templateTraits) as $templateTrait) {
                 array_unshift($originClass->stmts, $templateTrait);
             }
+
             return $originStmts;
         }
 
@@ -73,7 +74,7 @@ class UpdateTraitsStatements
 
         if (count($templateTraitsCollection)) {
             $trait = new TraitUse($templateTraitsCollection);
-            array_unshift($originClass->stmts, $trait);
+            $this->insertStatementClose($originClass, $trait);
         }
 
         return $originStmts;

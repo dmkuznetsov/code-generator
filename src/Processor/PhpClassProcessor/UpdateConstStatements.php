@@ -10,7 +10,7 @@ use PhpParser\Parser;
 
 class UpdateConstStatements
 {
-    use GetClassTrait, GetClassConstTrait;
+    use GetClassTrait, GetClassConstTrait, InsertStatementTrait;
 
     /**
      * @var LoggerInterface
@@ -78,7 +78,7 @@ class UpdateConstStatements
         if (count($templateConstsCollection)) {
             foreach ($templateConstsCollection as $key => $item) {
                 $const = new ClassConst([$item], $templateConstsFlagsCollection[$key]);
-                array_unshift($originClass->stmts, $const);
+                $this->insertStatementClose($originClass, $const);
             }
         }
 

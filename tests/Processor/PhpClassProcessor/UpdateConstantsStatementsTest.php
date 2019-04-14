@@ -140,14 +140,14 @@ namespace App;
 
 class Classname
 {
-    const TEMPLATE_CONST = 'template';
-    public const TEMPLATE_PUBLIC = 'template_public';
-    protected const TEMPLATE_PROTECTED = 'template_protected';
-    private const TEMPLATE_PRIVATE = 'template_private';
     private const ORIGIN_PRIVATE = 'origin_private';
     protected const ORIGIN_PROTECTED = 'origin_protected';
     public const ORIGIN_PUBLIC = 'origin_public';
     const ORIGIN_CONST = 'origin';
+    private const TEMPLATE_PRIVATE = 'template_private';
+    protected const TEMPLATE_PROTECTED = 'template_protected';
+    public const TEMPLATE_PUBLIC = 'template_public';
+    const TEMPLATE_CONST = 'template';
 }
 PHP;
 
@@ -201,10 +201,6 @@ namespace App;
 
 class Classname
 {
-    const TEMPLATE_CONST = 'template';
-    public const TEMPLATE_PUBLIC = 'template_public';
-    protected const TEMPLATE_PROTECTED = 'template_protected';
-    private const TEMPLATE_PRIVATE = 'template_private';
     /**
      * ORIGIN_PRIVATE
      */
@@ -221,6 +217,10 @@ class Classname
      * ORIGIN_CONST
      */
     const ORIGIN_CONST = 'origin';
+    private const TEMPLATE_PRIVATE = 'template_private';
+    protected const TEMPLATE_PROTECTED = 'template_protected';
+    public const TEMPLATE_PUBLIC = 'template_public';
+    const TEMPLATE_CONST = 'template';
 }
 PHP;
 

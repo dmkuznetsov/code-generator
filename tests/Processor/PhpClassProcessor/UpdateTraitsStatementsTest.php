@@ -128,9 +128,9 @@ namespace App;
 
 class Classname
 {
-    use TemplateTrait, ExtraTemplateTrait;
     use OriginTrait, ExtraOriginTrait;
     use AdditionalOriginTrait, AdditionalTemplateTrait;
+    use TemplateTrait, ExtraTemplateTrait;
 }
 PHP;
 
@@ -169,12 +169,12 @@ namespace App;
 
 class Classname
 {
-    use TemplateTrait, ExtraTemplateTrait;
     use OriginTrait, ExtraOriginTrait;
     use AdditionalOriginTrait, AdditionalTemplateTrait;
     use HelloWorld {
         sayHello as protected;
     }
+    use TemplateTrait, ExtraTemplateTrait;
 }
 PHP;
 
