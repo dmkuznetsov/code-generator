@@ -10,6 +10,21 @@ trait GetClassMethodTrait
 {
     /**
      * @param Class_ $classStatement
+     * @return ClassMethod|null
+     */
+    protected function getClassConstructorStatement(Class_ $classStatement): ?ClassMethod
+    {
+        foreach ($this->getClassMethodStatements($classStatement) as $method) {
+            if ($method->name->toString() === '__construct') {
+                return $method;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Class_ $classStatement
      * @return ClassMethod[]
      */
     protected function &getClassMethodStatements(Class_ $classStatement): array

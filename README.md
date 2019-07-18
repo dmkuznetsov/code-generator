@@ -87,3 +87,4 @@ $generator->generate($templates, $processors);
 `protected abstract function templateProtectedMethod();`
 
 #### Убирает пробелы между методами
+#### Не совмещает body конструктора (только дополняет аргументы)
