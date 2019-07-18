@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
+use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassConstTrait;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\InsertStatementTrait;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\ClassConst;
 use Psr\Log\LoggerInterface;

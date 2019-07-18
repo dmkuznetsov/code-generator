@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
+namespace Octava\CodeGenerator\Processor\PhpClassProcessor\Traits;
 
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Class_;

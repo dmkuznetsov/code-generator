@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
 use Octava\CodeGenerator\Exception\ProcessorNotEqualNamespaceException;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use Psr\Log\LoggerInterface;

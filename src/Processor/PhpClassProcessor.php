@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator\Processor;
 
-use Octava\CodeGenerator\Processor\PhpClassProcessor\GetClassTrait;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateConstStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateImplementsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdatePropertyStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateTraitsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Octava\CodeGenerator\ProcessorInterface;
@@ -21,6 +22,8 @@ use Psr\Log\NullLogger;
 class PhpClassProcessor implements ProcessorInterface
 {
     use GetClassTrait;
+
+    private const EXT = 'php';
 
     /**
      * @var LoggerInterface
@@ -63,6 +66,7 @@ class PhpClassProcessor implements ProcessorInterface
             $resultStmts = (new UpdateImplementsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateTraitsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateConstStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+            $resultStmts = (new UpdatePropertyStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateProperties($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateConstructor($resultStmts, $templateStmts);
 //        $resultStmts = $this->updateMethods($resultStmts, $templateStmts);
@@ -79,6 +83,6 @@ class PhpClassProcessor implements ProcessorInterface
     {
         $ext = pathinfo($template->getOutputPath(), PATHINFO_EXTENSION);
 
-        return $ext === 'php';
+        return $ext === static::EXT;
     }
 }
