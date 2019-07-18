@@ -7,8 +7,6 @@ use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassPropertyTrai
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\InsertStatementTrait;
 use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\Property;
 use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
 
@@ -45,12 +43,12 @@ class UpdatePropertyStatements
             return $originStmts;
         }
 
-        $templateProperties = $this->getPropertyStatements($templateClass);
+        $templateProperties = $this->getClassPropertyStatements($templateClass);
         if (!$templateProperties) {
             return $originStmts;
         }
 
-        $originProperties = $this->getPropertyStatements($originClass);
+        $originProperties = $this->getClassPropertyStatements($originClass);
         if (!$originProperties) {
             foreach (array_reverse($templateProperties) as $templateProperty) {
                 array_unshift($originClass->stmts, $templateProperty);

@@ -75,3 +75,15 @@ $generator->generate($templates, $processors);
 #### Конструктор
 - Расширение конструктора
 - Обновление PHPDoc
+
+
+
+Заметки
+
+#### Меняет порядок ключевых слов
+
+`abstract protected function templateProtectedMethod();`
+приводит к виду
+`protected abstract function templateProtectedMethod();`
+
+#### Убирает пробелы между методами

@@ -10,13 +10,13 @@ trait InsertStatementTrait
 {
     /**
      * @param Class_ $class
-     * @param Stmt $stmt
+     * @param Stmt[] $stmts
      * @return void
      */
-    protected function insertStatementClose(Class_ $class, Stmt $stmt): void
+    protected function insertStatementClose(Class_ $class, Stmt ...$stmts): void
     {
         $position = 0;
-        $classname = get_class($stmt);
+        $classname = get_class(current($stmts));
         foreach ($class->stmts as $key => $value) {
             if ($value instanceof $classname) {
                 $position = $key;
@@ -27,7 +27,9 @@ trait InsertStatementTrait
         foreach ($class->stmts as $key => $value) {
             $tmp[] = $value;
             if ($key === $position) {
-                $tmp[] = $stmt;
+                foreach ($stmts as $stmt) {
+                    $tmp[] = $stmt;
+                }
             }
         }
         $class->stmts = $tmp;

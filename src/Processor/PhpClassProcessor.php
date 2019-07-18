@@ -8,6 +8,7 @@ use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateConstStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateImplementsStatements;
+use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateMethodStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdatePropertyStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateTraitsStatements;
@@ -64,6 +65,7 @@ class PhpClassProcessor implements ProcessorInterface
             $resultStmts = (new UpdateClassStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateExtendsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateImplementsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
+            $resultStmts = (new UpdateMethodStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdatePropertyStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateConstStatements($this->logger, $this->parser))($resultStmts, $templateStmts);
             $resultStmts = (new UpdateTraitsStatements($this->logger, $this->parser))($resultStmts, $templateStmts);

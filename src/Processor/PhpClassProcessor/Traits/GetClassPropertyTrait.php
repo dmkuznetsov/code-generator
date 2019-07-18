@@ -12,7 +12,7 @@ trait GetClassPropertyTrait
      * @param Class_ $classStatement
      * @return Property[]
      */
-    protected function &getPropertyStatements(Class_ $classStatement): array
+    protected function &getClassPropertyStatements(Class_ $classStatement): array
     {
         $result = [];
         foreach ($classStatement->stmts as $stmt) {
