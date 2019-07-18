@@ -17,7 +17,7 @@ use Octava\CodeGenerator\TemplateFactory;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-[$templatesPath, $destinationPath, $namespace] = parseArgs($argv);
+[$templatesPath, $destinationPath] = parseArgs($argv);
 
 $configuration = new Configuration($templatesPath, $destinationPath);
 $generator = new CodeGenerator($configuration, new Writer());
@@ -45,9 +45,7 @@ function parseArgs($args) {
         showHelp('Invalid usage');
     }
 
-    $templatesPath = $args[1];
-    $destinationPath = $args[2];
-    $namespace = $args[3] ?? null;
+    [$script, $templatesPath, $destinationPath] = $args;
 
     if (!is_dir($templatesPath)) {
         showHelp(sprintf('Invalid TEMPLATES paths: %s', $templatesPath));
@@ -56,5 +54,5 @@ function parseArgs($args) {
         showHelp(sprintf('DESTINATION path does not exists: %s', $destinationPath));
     }
 
-    return [$templatesPath, $destinationPath, $namespace];
+    return [$templatesPath, $destinationPath];
 }

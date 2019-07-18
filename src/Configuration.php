@@ -57,9 +57,4 @@ class Configuration implements ConfigurationInterface
     {
         return $this->templatesDir;
     }
-
-    public function getNamespace(): string
-    {
-        // TODO: Implement getNamespace() method.
-    }
 }

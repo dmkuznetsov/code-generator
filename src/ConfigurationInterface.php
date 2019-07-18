@@ -19,9 +19,4 @@ interface ConfigurationInterface
      * @return array
      */
     public function getTemplateVars(): array;
-
-    /**
-     * @return string
-     */
-    public function getNamespace(): string;
 }
