@@ -7,8 +7,8 @@ use Octava\CodeGenerator\Exception\ProcessorNotEqualNamespaceException;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
-use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
+use Psr\Log\LoggerInterface;
 
 class UpdateNamespaceStatements
 {

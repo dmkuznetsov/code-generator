@@ -6,8 +6,8 @@ namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 use Octava\CodeGenerator\Exception\ProcessorConflictClassExtendsException;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use PhpParser\Node\Stmt;
-use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
+use Psr\Log\LoggerInterface;
 
 class UpdateExtendsStatements
 {

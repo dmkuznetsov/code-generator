@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 
 use PhpParser\Node\Stmt;
-use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\Namespace_;
-use Psr\Log\LoggerInterface;
+use PhpParser\Node\Stmt\Use_;
 use PhpParser\Parser;
+use Psr\Log\LoggerInterface;
 
 class UpdateUseStatements
 {
@@ -74,6 +74,7 @@ class UpdateUseStatements
         if (null !== $namespace) {
             $place = &$namespace->stmts;
         } else {
+            /** @noinspection PhpUndefinedFieldInspection */
             $place = &$result->stmts;
         }
 

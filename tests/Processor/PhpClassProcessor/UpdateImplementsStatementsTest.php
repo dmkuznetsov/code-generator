@@ -53,7 +53,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -86,7 +89,10 @@ class Classname implements OriginInterface
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -119,7 +125,10 @@ class Classname implements TemplateImplements
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -152,7 +161,10 @@ class Classname implements TemplateImplements, OriginImplements
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -186,7 +198,10 @@ class Classname implements OriginInterface, BaseInterface, TemplateInterface, Ex
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }

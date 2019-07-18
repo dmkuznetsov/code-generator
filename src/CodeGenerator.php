@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
 class CodeGenerator
 {
@@ -16,7 +17,7 @@ class CodeGenerator
      */
     protected $configuration;
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
     /**
@@ -46,7 +47,7 @@ class CodeGenerator
         );
 
         $templates = [];
-        /** @var \SplFileInfo $file */
+        /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
             if (!$file->isDir()) {
                 $this->logger->debug(sprintf('[SCAN] Found %s', $file->getPathname()));

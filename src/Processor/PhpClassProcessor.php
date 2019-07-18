@@ -16,9 +16,9 @@ use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateTraitsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateUseStatements;
 use Octava\CodeGenerator\ProcessorInterface;
 use Octava\CodeGenerator\TemplateInterface;
+use PhpParser\Parser;
 use PhpParser\PrettyPrinterAbstract;
 use Psr\Log\LoggerInterface;
-use PhpParser\Parser;
 use Psr\Log\NullLogger;
 
 class PhpClassProcessor implements ProcessorInterface

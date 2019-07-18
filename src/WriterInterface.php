@@ -13,5 +13,5 @@ interface WriterInterface
      * @return void
      * @throws WriterException
      */
-    public function write(string $filepath, string $content): void ;
+    public function write(string $filepath, string $content): void;
 }

@@ -6,8 +6,8 @@ namespace Octava\CodeGenerator\Processor\PhpClassProcessor;
 use Octava\CodeGenerator\Exception\ProcessorConflictClassnameException;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use PhpParser\Node\Stmt;
-use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
+use Psr\Log\LoggerInterface;
 
 class UpdateClassStatements
 {
@@ -44,6 +44,7 @@ class UpdateClassStatements
         }
         if (!$originClass) {
             $originStmts[] = $templateClass;
+
             return $originStmts;
         }
 

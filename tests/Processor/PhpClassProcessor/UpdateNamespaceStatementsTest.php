@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace Octava\Tests\CodeGenerator\Processor\PhpClassProcessor;
 
-use Octava\CodeGenerator\Exception\ProcessorConflictClassExtendsException;
-use Octava\CodeGenerator\Exception\ProcessorConflictClassnameException;
 use Octava\CodeGenerator\Exception\ProcessorNotEqualNamespaceException;
-use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateClassStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateExtendsStatements;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\UpdateNamespaceStatements;
 use PhpParser\Parser;
@@ -106,7 +103,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }

@@ -22,6 +22,13 @@ class Template implements TemplateInterface
      */
     protected $templateVars;
 
+    /**
+     * Template constructor.
+     * @param string $templatePath
+     * @param string $outputDir
+     * @param string $outputFilename
+     * @param array $templateVars
+     */
     public function __construct(
         string $templatePath,
         string $outputDir,

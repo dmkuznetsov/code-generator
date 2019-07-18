@@ -7,8 +7,8 @@ use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassMethodTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetClassTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\InsertStatementTrait;
 use PhpParser\Node\Stmt;
-use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
+use Psr\Log\LoggerInterface;
 
 class UpdateConstructorStatement
 {

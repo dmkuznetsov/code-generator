@@ -8,8 +8,8 @@ use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\GetTraitTrait;
 use Octava\CodeGenerator\Processor\PhpClassProcessor\Traits\InsertStatementTrait;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\TraitUse;
-use Psr\Log\LoggerInterface;
 use PhpParser\Parser;
+use Psr\Log\LoggerInterface;
 
 class UpdateTraitsStatements
 {

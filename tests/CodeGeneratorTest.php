@@ -75,7 +75,7 @@ class CodeGeneratorTest extends TestCase
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
         $processors = [
             new SimpleProcessor(),
-            new PhpClassProcessor($parser, $printer)
+            new PhpClassProcessor($parser, $printer),
         ];
         $generator->generate($templates, $processors);
     }

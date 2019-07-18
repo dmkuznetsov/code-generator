@@ -18,6 +18,12 @@ class Configuration implements ConfigurationInterface
      */
     protected $templateVars;
 
+    /**
+     * Configuration constructor.
+     * @param string $templatesDir
+     * @param string $outputDir
+     * @param array $templateVars
+     */
     public function __construct(
         string $templatesDir,
         string $outputDir,

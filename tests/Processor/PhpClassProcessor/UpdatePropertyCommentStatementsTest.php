@@ -63,7 +63,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -106,7 +109,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -159,7 +165,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -207,7 +216,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -300,7 +312,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -355,7 +370,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
@@ -427,7 +445,10 @@ class Classname
 }
 PHP;
 
-        $actualSourceStmts = $this->processor->__invoke($this->parser->parse($originSource), $this->parser->parse($templateSource));
+        $actualSourceStmts = $this->processor->__invoke(
+            $this->parser->parse($originSource),
+            $this->parser->parse($templateSource)
+        );
         $actualSource = $this->printer->prettyPrint($actualSourceStmts);
         $this->assertEquals($expectedSource, $actualSource);
     }
