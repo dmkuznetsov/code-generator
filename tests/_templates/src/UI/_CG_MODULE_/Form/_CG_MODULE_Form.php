@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  * Class _FILENAME_Form
  * @package App\UI\Controller\_DIRECTORY_\Form
  */
-class _FILENAME_Form extends AbstractType
+class _CG_MODULE_Form extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder

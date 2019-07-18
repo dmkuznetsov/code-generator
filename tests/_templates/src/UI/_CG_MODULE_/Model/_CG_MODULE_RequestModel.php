@@ -13,7 +13,7 @@ use Swagger\Annotations as SWG;
  *     required={"id"}
  * )
  */
-class _FILENAME_RequestModel
+class _CG_MODULE_RequestModel
 {
     /**
      * Идентификатор

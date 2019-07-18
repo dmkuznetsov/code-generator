@@ -13,7 +13,7 @@ use Swagger\Annotations as SWG;
  *     required={"id"}
  * )
  */
-class _FILENAME_Dto
+class _CG_MODULE_Dto
 {
     /**
      * Id

@@ -11,8 +11,20 @@
 ## Установка
 
 ```bash
-composer require octava/generator --dev
+composer require octava/code-generator --dev
 ```
+
+## Предопределенные переменные шаблонов
+
+`_CG_FILE_NAME_` - имя файла (`TestController` для файла `TestController.php`)
+`_CG_FILE_NAME_UCFIRST_` - имя файла с большой буквы (`TestController` для файла `TestController.php`)
+`_CG_FILE_NAME_LCFIRST_` - имя файла с маленькой буквы (`testController` для файла `TestController.php`)
+`_CG_FILE_BASENAME_` => $basename  (`TestController` для файла `TestController.php`)
+`_CG_FILE_DIR_` => $dir,
+`_CG_FILE_PATH_` => $dir.DIRECTORY_SEPARATOR.$filename,
+`_CG_FILE_EXTENSION_` - расширение файла (`php` для файла `TestController.php`)
+`_CG_NAMESPACE_` - namespace (`App\UI` для файла `src/App/UI/TestController.php`)
+
 
 ## Примеры использования
 

@@ -45,12 +45,12 @@ class CodeGeneratorTest extends TestCase
 
         $expected = [];
         $expectedFiles = [
-            'src/Application/_CG_MODULE_/Assembler/Assembler.php' => 'src/Application/MyFavourite/Assembler/Assembler.php',
-            'src/Application/_CG_MODULE_/Assembler/AssemblerInterface.php' => 'src/Application/MyFavourite/Assembler/AssemblerInterface.php',
-            'src/Application/_CG_MODULE_/Dto/Dto.php' => 'src/Application/MyFavourite/Dto/Dto.php',
-            'src/Application/_CG_MODULE_/Service.php' => 'src/Application/MyFavourite/Service.php',
-            'src/UI/_CG_MODULE_/Form/Form.php' => 'src/UI/MyFavourite/Form/Form.php',
-            'src/UI/_CG_MODULE_/Model/RequestModel.php' => 'src/UI/MyFavourite/Model/RequestModel.php',
+            'src/Application/_CG_MODULE_/Assembler/_CG_MODULE_Assembler.php' => 'src/Application/MyFavourite/Assembler/MyFavouriteAssembler.php',
+            'src/Application/_CG_MODULE_/Assembler/_CG_MODULE_AssemblerInterface.php' => 'src/Application/MyFavourite/Assembler/MyFavouriteAssemblerInterface.php',
+            'src/Application/_CG_MODULE_/Dto/_CG_MODULE_Dto.php' => 'src/Application/MyFavourite/Dto/MyFavouriteDto.php',
+            'src/Application/_CG_MODULE_/_CG_MODULE_Service.php' => 'src/Application/MyFavourite/MyFavouriteService.php',
+            'src/UI/_CG_MODULE_/Form/_CG_MODULE_Form.php' => 'src/UI/MyFavourite/Form/MyFavouriteForm.php',
+            'src/UI/_CG_MODULE_/Model/_CG_MODULE_RequestModel.php' => 'src/UI/MyFavourite/Model/MyFavouriteRequestModel.php',
             'src/UI/_CG_MODULE_Controller.php' => 'src/UI/MyFavouriteController.php',
             'tests/api/v1/_CG_MODULE_Cest.php' => 'tests/api/v1/MyFavouriteCest.php',
         ];
