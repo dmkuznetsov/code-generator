@@ -42,16 +42,24 @@ class CodeGenerator
      */
     public function scan(TemplateFactory $templateFactory): array
     {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($this->configuration->getTemplatesDir())
-        );
-
         $templates = [];
-        /** @var SplFileInfo $file */
-        foreach ($iterator as $file) {
-            if (!$file->isDir()) {
-                $this->logger->debug(sprintf('[SCAN] Found %s', $file->getPathname()));
-                $templates[] = $templateFactory->create($file->getPathname());
+        foreach ($this->configuration->getTemplates() as $template) {
+            if (is_file($template)) {
+                $this->logger->debug(sprintf('[SCAN] Found %s', $template));
+                $templates[] = $templateFactory->create($template);
+                continue;
+            }
+
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($this->configuration->getTemplates())
+            );
+
+            /** @var SplFileInfo $file */
+            foreach ($iterator as $file) {
+                if (!$file->isDir()) {
+                    $this->logger->debug(sprintf('[SCAN] Found %s', $file->getPathname()));
+                    $templates[] = $templateFactory->create($file->getPathname());
+                }
             }
         }
 

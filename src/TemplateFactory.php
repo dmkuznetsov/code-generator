@@ -30,7 +30,7 @@ class TemplateFactory
     ): TemplateInterface {
         $pathInfo = pathinfo($templatePath);
         $dir = trim(
-            $this->getSuffix($pathInfo['dirname'], $this->configuration->getTemplatesDir()),
+            $this->getSuffix($pathInfo['dirname'], $this->configuration->getTemplatesRoot()),
             DIRECTORY_SEPARATOR
         );
         $filename = $pathInfo['filename'];
@@ -42,7 +42,14 @@ class TemplateFactory
         if (null === $outputFilename) {
             $outputFilename = $basename;
         }
-        $namespace = str_replace(DIRECTORY_SEPARATOR, '\\', $dir);
+        $namespace = '';
+        if (!empty($this->configuration->getNamespace())) {
+            $namespace = $this->configuration->getNamespace();
+            if (!empty($dir)) {
+                $namespace .= '\\';
+            }
+        }
+        $namespace .= str_replace(DIRECTORY_SEPARATOR, '\\', $dir);
         $data = array_replace(
             [
                 '_CG_FILE_NAME_' => $filename,
@@ -62,9 +69,9 @@ class TemplateFactory
         $outputFilename = str_replace(array_keys($data), array_values($data), $outputFilename);
 
         return new Template(
-            $this->configuration->getTemplatesDir().DIRECTORY_SEPARATOR.$this->getSuffix(
+            $this->configuration->getTemplates().DIRECTORY_SEPARATOR.$this->getSuffix(
                 $templatePath,
-                $this->configuration->getTemplatesDir()
+                $this->configuration->getTemplates()
             ),
             $outputDir,
             $outputFilename,
