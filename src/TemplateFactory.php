@@ -71,7 +71,7 @@ class TemplateFactory
         return new Template(
             $this->configuration->getTemplates().DIRECTORY_SEPARATOR.$this->getSuffix(
                 $templatePath,
-                $this->configuration->getTemplates()
+                $this->configuration->getTemplatesRoot()
             ),
             $outputDir,
             $outputFilename,
