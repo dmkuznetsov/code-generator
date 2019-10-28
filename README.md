@@ -2,6 +2,8 @@
 
 Кодогенератор для PHP, написанный на PHP.
 
+[![SymfonyInsight](https://insight.symfony.com/projects/ca91786d-2532-45da-b2b7-24acad77ad55/big.svg)](https://insight.symfony.com/projects/ca91786d-2532-45da-b2b7-24acad77ad55)
+
 Позволяет, на основании шаблонов файлов, генерировать файлы
 по заданным параметрам.
 Так же, дополняет уже существующие классы, при возникновении
