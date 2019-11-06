@@ -6,8 +6,7 @@
 
 Позволяет, на основании шаблонов файлов, генерировать файлы
 по заданным параметрам.
-Так же, дополняет уже существующие классы, при возникновении
-конфликтов.
+Так же, умеет совмещать код в классах.
 
 
 ## Установка
@@ -19,12 +18,19 @@ composer require octava/code-generator --dev
 ## Предопределенные переменные шаблонов
 
 `_CG_FILE_NAME_` - имя файла (`TestController` для файла `TestController.php`)
+
 `_CG_FILE_NAME_UCFIRST_` - имя файла с большой буквы (`TestController` для файла `TestController.php`)
+
 `_CG_FILE_NAME_LCFIRST_` - имя файла с маленькой буквы (`testController` для файла `TestController.php`)
+
 `_CG_FILE_BASENAME_` => $basename  (`TestController` для файла `TestController.php`)
+
 `_CG_FILE_DIR_` => $dir,
+
 `_CG_FILE_PATH_` => $dir.DIRECTORY_SEPARATOR.$filename,
+
 `_CG_FILE_EXTENSION_` - расширение файла (`php` для файла `TestController.php`)
+
 `_CG_NAMESPACE_` - namespace (`App\UI` для файла `src/App/UI/TestController.php`)
 
 
@@ -85,7 +91,9 @@ $generator->generate($templates, $processors);
 #### Меняет порядок ключевых слов
 
 `abstract protected function templateProtectedMethod();`
+
 приводит к виду
+
 `protected abstract function templateProtectedMethod();`
 
 #### Убирает пробелы между методами

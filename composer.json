@@ -39,5 +39,10 @@
         "classmap": ["tests/"],
         "exclude-from-classmap": ["tests/_templates"]
     },
-    "bin": ["bin/code-generator"]
+    "bin": ["bin/code-generator"],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
 }
