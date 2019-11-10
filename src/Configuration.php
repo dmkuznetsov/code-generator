@@ -31,13 +31,14 @@ class Configuration implements ConfigurationInterface
      * Configuration constructor.
      * @param string $baseTemplateDir
      * @param string $baseOutputDir
+     * @param array $templateVars
      */
-    public function __construct(string $baseTemplateDir, string $baseOutputDir = '')
+    public function __construct(string $baseTemplateDir, string $baseOutputDir, array $templateVars = [])
     {
         $this->baseTemplateDir = rtrim(trim($baseTemplateDir), DIRECTORY_SEPARATOR);
         $this->baseOutputDir = rtrim(trim($baseOutputDir), DIRECTORY_SEPARATOR);
         $this->logger = new NullLogger();
-        $this->templateVars = [];
+        $this->templateVars = $templateVars;
         $this->processors = [];
     }
 

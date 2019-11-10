@@ -44,8 +44,8 @@ class TemplateFactory
                 '_CG_FILE_PATH_' => $dir.DIRECTORY_SEPARATOR.$filename,
                 '_CG_FILE_EXTENSION_' => $extension,
             ],
-            $templateVars,
-            $this->configuration->getTemplateVars()
+            $this->configuration->getTemplateVars(),
+            $templateVars
         );
 
         $outputDir = str_replace(array_keys($data), array_values($data), $this->configuration->getBaseOutputDir());

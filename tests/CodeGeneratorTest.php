@@ -54,7 +54,7 @@ class CodeGeneratorTest extends TestCase
                 )
             );
         $this->assertFileEquals(
-            __DIR__.'/_resultTemplates/src/Application/MyFavourite/MyFavouriteService.php',
+            __DIR__.'/_sampleTemplates/src/Application/MyFavourite/MyFavouriteService.php',
             __DIR__.'/_data/cg/src/Application/MyFavourite/MyFavouriteService.php'
         );
     }
