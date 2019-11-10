@@ -37,9 +37,8 @@
     },
     "autoload-dev": {
         "classmap": ["tests/"],
-        "exclude-from-classmap": ["tests/_templates"]
+        "exclude-from-classmap": ["tests/_templates", "tests/_resultTemplates"]
     },
-    "bin": ["bin/code-generator"],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
