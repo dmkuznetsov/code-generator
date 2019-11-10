@@ -12,11 +12,7 @@ class Template implements TemplateInterface
     /**
      * @var string
      */
-    protected $outputDir;
-    /**
-     * @var string
-     */
-    protected $outputFilename;
+    protected $outputPath;
     /**
      * @var array
      */
@@ -25,24 +21,21 @@ class Template implements TemplateInterface
     /**
      * Template constructor.
      * @param string $templatePath
-     * @param string $outputDir
-     * @param string $outputFilename
+     * @param string $outputPath
      * @param array $templateVars
      */
     public function __construct(
         string $templatePath,
-        string $outputDir,
-        string $outputFilename,
+        string $outputPath,
         array $templateVars
     ) {
         $this->templatePath = $templatePath;
-        $this->outputDir = $outputDir;
-        $this->outputFilename = $outputFilename;
+        $this->outputPath = $outputPath;
         $this->templateVars = $templateVars;
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getTemplatePath(): string
     {
@@ -50,34 +43,18 @@ class Template implements TemplateInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
+     */
+    public function getOutputPath(): string
+    {
+        return $this->outputPath;
+    }
+
+    /**
+     * @inheritDoc
      */
     public function getTemplateVars(): array
     {
         return $this->templateVars;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutputPath(): string
-    {
-        return $this->getOutputDir().DIRECTORY_SEPARATOR.$this->getOutputFilename();
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutputDir(): string
-    {
-        return $this->outputDir;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutputFilename(): string
-    {
-        return $this->outputFilename;
     }
 }

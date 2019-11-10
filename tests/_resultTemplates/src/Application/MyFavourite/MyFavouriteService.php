@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\_CG_MODULE_;
+namespace App\Application\MyFavourite;
 
-class _CG_MODULE_Service
+class MyFavouriteService
 {
     public function __construct()
     {

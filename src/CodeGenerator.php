@@ -4,11 +4,6 @@ declare(strict_types=1);
 namespace Octava\CodeGenerator;
 
 use Octava\CodeGenerator\Exception\ProcessorException;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
 
 class CodeGenerator
 {
@@ -17,67 +12,35 @@ class CodeGenerator
      */
     protected $configuration;
     /**
-     * @var LoggerInterface
+     * @var FilesystemInterface
      */
-    protected $logger;
-    /**
-     * @var WriterInterface
-     */
-    protected $writer;
+    protected $filesystem;
 
     public function __construct(
         ConfigurationInterface $configuration,
-        WriterInterface $writer,
-        LoggerInterface $logger = null
+        FilesystemInterface $filesystem
     ) {
         $this->configuration = $configuration;
-        $this->logger = $logger ?? new NullLogger();
-        $this->writer = $writer;
+        $this->filesystem = $filesystem;
     }
 
     /**
-     * Scan templates folder
-     * @param TemplateFactory $templateFactory
-     * @return TemplateInterface[]
-     */
-    public function scan(TemplateFactory $templateFactory): array
-    {
-        $templates = [];
-        foreach ($this->configuration->getTemplates() as $template) {
-            if (is_file($template)) {
-                $this->logger->debug(sprintf('[SCAN] Found %s', $template));
-                $templates[] = $templateFactory->create($template);
-                continue;
-            }
-
-            $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($this->configuration->getTemplates())
-            );
-
-            /** @var SplFileInfo $file */
-            foreach ($iterator as $file) {
-                if (!$file->isDir()) {
-                    $this->logger->debug(sprintf('[SCAN] Found %s', $file->getPathname()));
-                    $templates[] = $templateFactory->create($file->getPathname());
-                }
-            }
-        }
-
-        return $templates;
-    }
-
-    /**
-     * @param TemplateInterface[] $templates
-     * @param ProcessorInterface[] $processors
+     * @param TemplateInterface ...$templates
      * @throws CodeGeneratorException
      */
-    public function generate(array $templates, array $processors): void
+    public function generate(TemplateInterface ...$templates): void
     {
+        if (!count($templates)) {
+            $this->configuration->getLogger()->info('[GENERATE] No templates given');
+
+            return;
+        }
+
         $errors = [];
         foreach ($templates as $template) {
             try {
                 if (!$template instanceof TemplateInterface) {
-                    $this->logger->emergency(
+                    $this->configuration->getLogger()->emergency(
                         sprintf(
                             '[GENERATE] Template must be instance of TemplateInterface, %s given',
                             get_class($template)
@@ -88,30 +51,32 @@ class CodeGenerator
                     );
                 }
 
-                if (!file_exists($template->getTemplatePath())) {
-                    $this->logger->emergency(sprintf('[GENERATE] Template %s not found', $template->getTemplatePath()));
+                if (!$this->filesystem->exists($template->getTemplatePath())) {
+                    $this->configuration->getLogger()->emergency(
+                        sprintf('[GENERATE] Template %s not found', $template->getTemplatePath())
+                    );
                     throw new CodeGeneratorException(
                         sprintf('Template %s not found', $template->getTemplatePath())
                     );
                 }
-                $this->logger->debug(
+                $this->configuration->getLogger()->debug(
                     '[GENERATE] Start processing',
                     [
-                        'output' => $template->getOutputPath(),
-                        'template' => $template->getOutputPath(),
-                        'vars' => $template->getTemplateVars(),
+                        'template_path' => $template->getTemplatePath(),
+                        'output_path' => $template->getOutputPath(),
+                        'template_vars' => $template->getTemplateVars(),
                     ]
                 );
 
-                $this->process($template, $processors);
+                $this->process($template, $this->configuration->getProcessors());
             } catch (CodeGeneratorException $e) {
                 $errors[] = $e->getMessage();
-                $this->logger->error(
+                $this->configuration->getLogger()->error(
                     sprintf('[GENERATE] Error processing: %s', $e->getMessage()),
                     [
-                        'output' => $template->getOutputPath(),
-                        'template' => $template->getOutputPath(),
-                        'variables' => $template->getTemplateVars(),
+                        'template_path' => $template->getTemplatePath(),
+                        'output_path' => $template->getOutputPath(),
+                        'template_vars' => $template->getTemplateVars(),
                     ]
                 );
             }
@@ -130,18 +95,19 @@ class CodeGenerator
      * @return string
      * @throws CodeGeneratorException
      */
-    protected function process(TemplateInterface $template, array $processors): string
+    public function process(TemplateInterface $template, array $processors): string
     {
         $originSource = '';
-        if (file_exists($template->getOutputPath())) {
-            $originSource = file_get_contents($template->getOutputPath());
+        if ($this->filesystem->exists($template->getOutputPath())) {
+            $originSource = $this->filesystem->read($template->getOutputPath());
         }
         /** @var string $templateSource */
-        $templateSource = file_get_contents($template->getTemplatePath());
+        $templateSource = $this->filesystem->read($template->getTemplatePath());
         if (!$templateSource) {
             throw new CodeGeneratorException(sprintf('Template source "%s" not found', $template->getTemplatePath()));
         }
         $templateVars = $template->getTemplateVars();
+
         $result = null;
         foreach ($processors as $processor) {
             if (!$processor instanceof ProcessorInterface) {
@@ -151,28 +117,33 @@ class CodeGenerator
             }
 
             if (!$processor->canBeProcessed($template)) {
-                $this->logger->debug(
+                $this->configuration->getLogger()->debug(
                     sprintf(
                         '[PROCESS] Origin file %s not found. PhpClassProcessor skipped',
                         $template->getOutputPath()
                     )
                 );
             } else {
-                $this->logger->debug(
+                $this->configuration->getLogger()->debug(
                     sprintf('[PROCESS] Applying %s to file '.$template->getTemplatePath(), get_class($template))
                 );
                 try {
-                    $result = $processor->process($originSource, (string)($result || $templateSource), $templateVars);
+                    $result = $processor->process($originSource, $result ?? $templateSource, $templateVars);
                 } catch (ProcessorException $e) {
-                    $this->logger->debug('[PROCESS] Write result to '.$template->getOutputPath().'.generated');
-                    $this->writer->write($template->getOutputPath(), (string)($result || $templateSource));
+                    $this->configuration->getLogger()->debug(
+                        '[PROCESS] Write result to '.$template->getOutputPath().'.generated'
+                    );
+                    $this->filesystem->dump($template->getOutputPath(), $result ?? $templateSource);
                     throw $e;
                 }
             }
         }
 
-        $this->logger->debug('[PROCESS] Write result to '.$template->getOutputPath());
-        $this->writer->write($template->getOutputPath(), (string)($result || $templateSource));
+        if (empty($result) && !count($processors)) {
+            $result = $templateSource;
+        }
+        $this->configuration->getLogger()->debug('[PROCESS] Write result to '.$template->getOutputPath());
+        $this->filesystem->dump($template->getOutputPath(), (string)$result);
 
         return $result;
     }

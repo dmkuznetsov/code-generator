@@ -17,39 +17,23 @@ class TemplateFactory
 
     /**
      * @param string $templatePath Relative template's path
+     * @param string $outputPath
      * @param array $templateVars
-     * @param string|null $outputDir
-     * @param string|null $outputFilename
      * @return TemplateInterface
      */
     public function create(
         string $templatePath,
-        array $templateVars = [],
-        ?string $outputDir = null,
-        ?string $outputFilename = null
+        string $outputPath,
+        array $templateVars = []
     ): TemplateInterface {
+        $templatePath = ltrim(trim($templatePath), DIRECTORY_SEPARATOR);
+        $outputPath = ltrim(trim($outputPath), DIRECTORY_SEPARATOR);
         $pathInfo = pathinfo($templatePath);
-        $dir = trim(
-            $this->getSuffix($pathInfo['dirname'], $this->configuration->getTemplatesRoot()),
-            DIRECTORY_SEPARATOR
-        );
+        $dir = $pathInfo['dirname'];
         $filename = $pathInfo['filename'];
         $basename = $pathInfo['basename'];
         $extension = $pathInfo['extension'];
-        if (null === $outputDir) {
-            $outputDir = $this->configuration->getOutputDir().(empty($dir) ? '' : DIRECTORY_SEPARATOR.$dir);
-        }
-        if (null === $outputFilename) {
-            $outputFilename = $basename;
-        }
-        $namespace = '';
-        if (!empty($this->configuration->getNamespace())) {
-            $namespace = $this->configuration->getNamespace();
-            if (!empty($dir)) {
-                $namespace .= '\\';
-            }
-        }
-        $namespace .= str_replace(DIRECTORY_SEPARATOR, '\\', $dir);
+
         $data = array_replace(
             [
                 '_CG_FILE_NAME_' => $filename,
@@ -59,42 +43,17 @@ class TemplateFactory
                 '_CG_FILE_DIR_' => $dir,
                 '_CG_FILE_PATH_' => $dir.DIRECTORY_SEPARATOR.$filename,
                 '_CG_FILE_EXTENSION_' => $extension,
-                '_CG_NAMESPACE_' => $namespace,
             ],
             $templateVars,
             $this->configuration->getTemplateVars()
         );
 
-        $outputDir = str_replace(array_keys($data), array_values($data), $outputDir);
-        $outputFilename = str_replace(array_keys($data), array_values($data), $outputFilename);
-
-        return new Template(
-            $this->configuration->getTemplates().DIRECTORY_SEPARATOR.$this->getSuffix(
-                $templatePath,
-                $this->configuration->getTemplatesRoot()
-            ),
-            $outputDir,
-            $outputFilename,
-            $data
-        );
-    }
-
-    /**
-     * @param string $haystack
-     * @param string $needle
-     * @return string
-     */
-    protected function getSuffix(string $haystack, string $needle): string
-    {
-        $result = $haystack;
-        if (strpos($haystack, $needle) === 0) {
-            if (strlen($needle) < strlen($haystack)) {
-                $result = substr($haystack, strlen($needle) + 1);
-            } else {
-                $result = '';
-            }
+        $outputDir = str_replace(array_keys($data), array_values($data), $this->configuration->getBaseOutputDir());
+        if (!empty($outputDir)) {
+            $outputDir .= DIRECTORY_SEPARATOR;
         }
+        $outputPath = $outputDir.str_replace(array_keys($data), array_values($data), $outputPath);
 
-        return $result;
+        return new Template($this->configuration->getBaseTemplatesDir().DIRECTORY_SEPARATOR.$templatePath, $outputPath, $data);
     }
 }

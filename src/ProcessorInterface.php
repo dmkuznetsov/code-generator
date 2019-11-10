@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Octava\CodeGenerator;
 
 use Octava\CodeGenerator\Exception\ProcessorException;
+use Psr\Log\LoggerInterface;
 
 interface ProcessorInterface
 {
@@ -21,4 +22,9 @@ interface ProcessorInterface
      * @return bool
      */
     public function canBeProcessed(TemplateInterface $template): bool;
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger);
 }

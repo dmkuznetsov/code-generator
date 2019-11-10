@@ -3,59 +3,58 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator;
 
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @var string[]
-     */
-    protected $templates;
+    use LoggerAwareTrait;
     /**
      * @var array
      */
-    protected $outputDir;
+    protected $baseTemplateDir;
+    /**
+     * @var string
+     */
+    protected $baseOutputDir;
     /**
      * @var array
      */
     protected $templateVars;
     /**
-     * @var string
+     * @var ProcessorInterface[]
      */
-    protected $templatesRoot;
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected $processors;
 
     /**
      * Configuration constructor.
-     * @param string $outputDir
-     * @param array $templates
-     * @param array $templateVars
-     * @param string $templatesRoot
-     * @param string $namespace
+     * @param string $baseTemplateDir
+     * @param string $baseOutputDir
      */
-    public function __construct(
-        string $outputDir,
-        array $templates,
-        array $templateVars = [],
-        string $templatesRoot = '',
-        string $namespace = ''
-    ) {
-        $this->outputDir = rtrim(trim($outputDir), DIRECTORY_SEPARATOR);
-        foreach ($templates as $template) {
-            $this->templates = rtrim(trim($template), DIRECTORY_SEPARATOR);
-        }
-        $this->templateVars = $templateVars;
-        $this->templatesRoot = rtrim(trim($templatesRoot), DIRECTORY_SEPARATOR);
-        $this->namespace = $namespace;
+    public function __construct(string $baseTemplateDir, string $baseOutputDir = '')
+    {
+        $this->baseTemplateDir = rtrim(trim($baseTemplateDir), DIRECTORY_SEPARATOR);
+        $this->baseOutputDir = rtrim(trim($baseOutputDir), DIRECTORY_SEPARATOR);
+        $this->logger = new NullLogger();
+        $this->templateVars = [];
+        $this->processors = [];
     }
 
     /**
      * @inheritDoc
      */
-    public function getOutputDir(): string
+    public function getBaseTemplatesDir(): string
     {
-        return $this->outputDir;
+        return $this->baseTemplateDir;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBaseOutputDir(): string
+    {
+        return $this->baseOutputDir;
     }
 
     /**
@@ -67,26 +66,41 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @inheritDoc
+     * @param array $templateVars
+     * @return $this
      */
-    public function getTemplates(): array
+    public function setTemplateVars(array $templateVars): self
     {
-        return $this->templates;
+        $this->templateVars = $templateVars;
+
+        return $this;
     }
 
     /**
-     * @inheritDoc
+     * @param ProcessorInterface $processor
+     * @return Configuration
      */
-    public function getTemplatesRoot(): string
+    public function addProcessor(ProcessorInterface $processor): self
     {
-        return $this->templatesRoot;
+        $processor->setLogger($this->getLogger());
+        $this->processors[] = $processor;
+
+        return $this;
     }
 
     /**
-     * @inheritDoc
+     * @return LoggerInterface
      */
-    public function getNamespace(): string
+    public function getLogger(): LoggerInterface
     {
-        return $this->namespace;
+        return $this->logger;
+    }
+
+    /**
+     * @return ProcessorInterface[]
+     */
+    public function getProcessors(): array
+    {
+        return $this->processors;
     }
 }

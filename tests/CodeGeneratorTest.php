@@ -4,111 +4,93 @@ declare(strict_types=1);
 namespace Octava\Tests\CodeGenerator;
 
 use Octava\CodeGenerator\CodeGenerator;
+use Octava\CodeGenerator\CodeGeneratorException;
 use Octava\CodeGenerator\Configuration;
 use Octava\CodeGenerator\ConfigurationInterface;
+use Octava\CodeGenerator\Filesystem;
 use Octava\CodeGenerator\Processor\PhpClassProcessor;
 use Octava\CodeGenerator\Processor\SimpleProcessor;
 use Octava\CodeGenerator\TemplateFactory;
-use Octava\Tests\_data\TestWriter;
 use PhpParser\ParserFactory;
-use PhpParser\PrettyPrinter\Standard;
+use PhpParser\PrettyPrinter;
 use PHPUnit\Framework\TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class CodeGeneratorTest extends TestCase
 {
     /**
-     * @var CodeGenerator
+     * @var string
      */
-    protected $codeGenerator;
+    private $templatesBasePath;
     /**
      * @var string
      */
-    protected $templatesDir;
-    /**
-     * @var string
-     */
-    protected $outputDir;
+    private $outputDir;
     /**
      * @var ConfigurationInterface
      */
-    protected $configuration;
+    private $configuration;
+    /**
+     * @var CodeGenerator
+     */
+    private $codeGenerator;
+    /**
+     * @var TemplateFactory
+     */
+    private $templateFactory;
 
-    public function testScan(): void
+    /**
+     * @throws CodeGeneratorException
+     */
+    public function testSingleGeneration(): void
     {
-        $actualTemplates = $this->codeGenerator->scan(new TemplateFactory($this->configuration));
-        $actual = [];
-        foreach ($actualTemplates as $template) {
-            $actual[$template->getTemplatePath()] = $template->getOutputDir(
-                ).DIRECTORY_SEPARATOR.$template->getOutputFilename();
-        }
-        ksort($actual);
-
-        $expected = [];
-        $expectedFiles = [
-            'src/Application/_CG_MODULE_/Assembler/_CG_MODULE_Assembler.php' => 'src/Application/MyFavourite/Assembler/MyFavouriteAssembler.php',
-            'src/Application/_CG_MODULE_/Assembler/_CG_MODULE_AssemblerInterface.php' => 'src/Application/MyFavourite/Assembler/MyFavouriteAssemblerInterface.php',
-            'src/Application/_CG_MODULE_/Dto/_CG_MODULE_Dto.php' => 'src/Application/MyFavourite/Dto/MyFavouriteDto.php',
-            'src/Application/_CG_MODULE_/_CG_MODULE_Service.php' => 'src/Application/MyFavourite/MyFavouriteService.php',
-            'src/UI/_CG_MODULE_/Form/_CG_MODULE_Form.php' => 'src/UI/MyFavourite/Form/MyFavouriteForm.php',
-            'src/UI/_CG_MODULE_/Model/_CG_MODULE_RequestModel.php' => 'src/UI/MyFavourite/Model/MyFavouriteRequestModel.php',
-            'src/UI/_CG_MODULE_Controller.php' => 'src/UI/MyFavouriteController.php',
-            'tests/api/v1/_CG_MODULE_Cest.php' => 'tests/api/v1/MyFavouriteCest.php',
-        ];
-        foreach ($expectedFiles as $templatePath => $outputPath) {
-            $expected[$this->templatesDir.DIRECTORY_SEPARATOR.$templatePath] = $this->outputDir.DIRECTORY_SEPARATOR.$outputPath;
-        }
-        $this->assertSame($expected, $actual);
-    }
-
-    public function _testGenerate(): void
-    {
-//        $actualTemplates = $this->codeGenerator->scan(new TemplateFactory($this->configuration));
-//        $this->codeGenerator->generate();
-        $configuration = new Configuration(
-            __DIR__.DIRECTORY_SEPARATOR.'_templates',
-            sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg'
+        $this->codeGenerator
+            ->generate(
+                $this->templateFactory->create(
+                    'src/Application/_CG_MODULE_/_CG_MODULE_Service.php',
+                    'src/Application/_CG_MODULE_/_CG_MODULE_Service.php',
+                    ['_CG_MODULE_' => 'MyFavourite']
+                )
+            );
+        $this->assertFileEquals(
+            __DIR__.'/_resultTemplates/src/Application/MyFavourite/MyFavouriteService.php',
+            __DIR__.'/_data/cg/src/Application/MyFavourite/MyFavouriteService.php'
         );
-        $writer = new TestWriter();
-        $generator = new CodeGenerator($configuration, $writer);
-        $templates = $generator->scan(new TemplateFactory($this->configuration));
-        $printer = new Standard();
-        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
-        $processors = [
-            new SimpleProcessor(),
-            new PhpClassProcessor($parser, $printer),
-        ];
-        $generator->generate($templates, $processors);
     }
 
     protected function setUp(): void
     {
-        $writer = new TestWriter();
-        $this->templatesDir = __DIR__.DIRECTORY_SEPARATOR.'_templates';
-        $this->outputDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'cg';
-        $this->configuration = new Configuration(
-            $this->templatesDir,
-            $this->outputDir,
-            ['_CG_MODULE_' => 'MyFavourite']
-        );
-        $this->codeGenerator = new CodeGenerator($this->configuration, $writer);
+        $this->templatesBasePath = __DIR__.'/_templates';
+        $this->outputDir = __DIR__.'/_data/cg';
+        $printer = new PrettyPrinter\Standard();
+        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $this->configuration = new Configuration($this->templatesBasePath, $this->outputDir);
+        $this->configuration
+            ->setTemplateVars([])
+            ->addProcessor(new SimpleProcessor())
+            ->addProcessor(new PhpClassProcessor($parser, $printer))
+        ;
+        $this->templateFactory = new TemplateFactory($this->configuration);
+        $this->codeGenerator = new CodeGenerator($this->configuration, new Filesystem());
     }
 
     protected function tearDown(): void
     {
-//        if (!is_dir($this->outputDir)) {
-//            return;
-//        }
-//
-//        $files = new RecursiveIteratorIterator(
-//            new RecursiveDirectoryIterator($this->outputDir, RecursiveDirectoryIterator::SKIP_DOTS),
-//            RecursiveIteratorIterator::CHILD_FIRST
-//        );
-//
-//        foreach ($files as $fileInfo) {
-//            $todo = ($fileInfo->isDir() ? 'rmdir' : 'unlink');
-//            $todo($fileInfo->getRealPath());
-//        }
-//
-//        rmdir($this->outputDir);
+        if (!is_dir($this->outputDir)) {
+            return;
+        }
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->outputDir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($files as $fileInfo) {
+            $todo = ($fileInfo->isDir() ? 'rmdir' : 'unlink');
+            $todo($fileInfo->getRealPath());
+        }
+
+        rmdir($this->outputDir);
     }
 }

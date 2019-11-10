@@ -18,19 +18,15 @@ use Octava\CodeGenerator\ProcessorInterface;
 use Octava\CodeGenerator\TemplateInterface;
 use PhpParser\Parser;
 use PhpParser\PrettyPrinterAbstract;
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 
 class PhpClassProcessor implements ProcessorInterface
 {
-    use GetClassTrait;
+    use GetClassTrait, LoggerAwareTrait;
 
     private const EXT = 'php';
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
     /**
      * @var Parser
      */
@@ -40,11 +36,11 @@ class PhpClassProcessor implements ProcessorInterface
      */
     protected $printer;
 
-    public function __construct(Parser $parser, PrettyPrinterAbstract $printer, LoggerInterface $logger = null)
+    public function __construct(Parser $parser, PrettyPrinterAbstract $printer)
     {
         $this->parser = $parser;
         $this->printer = $printer;
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger = new NullLogger();
     }
 
     /**

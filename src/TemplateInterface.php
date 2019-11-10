@@ -13,16 +13,6 @@ interface TemplateInterface
     /**
      * @return string
      */
-    public function getOutputDir(): string;
-
-    /**
-     * @return string
-     */
-    public function getOutputFilename(): string;
-
-    /**
-     * @return string
-     */
     public function getOutputPath(): string;
 
     /**

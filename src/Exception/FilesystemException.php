@@ -5,6 +5,6 @@ namespace Octava\CodeGenerator\Exception;
 
 use Octava\CodeGenerator\CodeGeneratorException;
 
-class WriterException extends CodeGeneratorException
+class FilesystemException extends CodeGeneratorException
 {
 }

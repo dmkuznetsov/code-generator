@@ -1,11 +1,10 @@
 # PHP Кодогенератор
 
-Кодогенератор для PHP, написанный на PHP.
+Умный кодогенератор для PHP, написанный на PHP.
 
 [![SymfonyInsight](https://insight.symfony.com/projects/ca91786d-2532-45da-b2b7-24acad77ad55/big.svg)](https://insight.symfony.com/projects/ca91786d-2532-45da-b2b7-24acad77ad55)
 
-Позволяет, на основании шаблонов файлов, генерировать файлы
-по заданным параметрам.
+Позволяет, на основании шаблонов файлов, генерировать файлы по заданным параметрам.
 Так же, умеет совмещать код в классах.
 
 
@@ -31,8 +30,6 @@ composer require octava/code-generator --dev
 
 `_CG_FILE_EXTENSION_` - расширение файла (`php` для файла `TestController.php`)
 
-`_CG_NAMESPACE_` - namespace (`App\UI` для файла `src/App/UI/TestController.php`)
-
 
 ## Примеры использования
 
@@ -40,61 +37,28 @@ composer require octava/code-generator --dev
 <?php
 use Octava\CodeGenerator\CodeGenerator;
 use Octava\CodeGenerator\Configuration;
-use Octava\CodeGenerator\Writer;
+use Octava\CodeGenerator\Filesystem;
 use Octava\CodeGenerator\Processor\PhpClassProcessor;
 use Octava\CodeGenerator\Processor\SimpleProcessor;
 use Octava\CodeGenerator\TemplateFactory;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-// Определяем конфигурацию
-$configuration = new Configuration(
-    '_templates', // путь к шаблонам
-    'src' // путь к результату
-);
+$configuration = new Configuration('base/templates/path', 'base/output/dir');
+$configuration
+    ->setTemplateVars([])
+    ->addProcessor(new SimpleProcessor())
+    ->addProcessor(new PhpClassProcessor((new ParserFactory)->create(ParserFactory::PREFER_PHP7), new Standard()))
+;
+$templateFactory = new TemplateFactory($configuration);
+$codeGenerator = new CodeGenerator($this->configuration, new Filesystem());
 
-$generator = new CodeGenerator($configuration, new Writer());
-
-// Ищем шаблоны
-$templates = $generator->scan(new TemplateFactory($configuration));
-// Определяем список процессоров для обработки шаблонов
-$processors = [
-    new SimpleProcessor(),
-    new PhpClassProcessor((new ParserFactory)->create(ParserFactory::PREFER_PHP7), new Standard())
-];
-// Запускаем генерацию
-$generator->generate($templates, $processors);
+$codeGenerator
+    ->generate(
+        $templateFactory->create(
+            'src/Application/_CG_MODULE_/_CG_MODULE_Service.php',
+            'src/Application/_CG_MODULE_/_CG_MODULE_Service.php',
+            ['_CG_MODULE_' => 'MyFavourite']
+        )
+    );
 ```
-
-Примеры шаблонов для генерации смотрите в папке `tests/_templates`.
-
-
-### TODO
-
-#### Traits
-- Область видимости в traits
-
-#### Константы
-- Перенос комментариев к константам
-
-#### Методы класса
-- Методы
-
-#### Конструктор
-- Расширение конструктора
-- Обновление PHPDoc
-
-
-
-Заметки
-
-#### Меняет порядок ключевых слов
-
-`abstract protected function templateProtectedMethod();`
-
-приводит к виду
-
-`protected abstract function templateProtectedMethod();`
-
-#### Убирает пробелы между методами
-#### Не совмещает body конструктора (только дополняет аргументы)

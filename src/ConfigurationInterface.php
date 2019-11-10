@@ -3,19 +3,21 @@ declare(strict_types=1);
 
 namespace Octava\CodeGenerator;
 
+use Psr\Log\LoggerInterface;
+
 interface ConfigurationInterface
 {
     /**
-     * Directory for result files
+     * Base templates directory
      * @return string
      */
-    public function getOutputDir(): string;
+    public function getBaseTemplatesDir(): string;
 
     /**
-     * List of path to templates
-     * @return string[]
+     * Base output directory
+     * @return string
      */
-    public function getTemplates(): array;
+    public function getBaseOutputDir(): string;
 
     /**
      * List of template vars
@@ -24,14 +26,12 @@ interface ConfigurationInterface
     public function getTemplateVars(): array;
 
     /**
-     * Template root directory
-     * @return string
+     * @return LoggerInterface
      */
-    public function getTemplatesRoot(): string;
+    public function getLogger(): LoggerInterface;
 
     /**
-     * Namespace for template root directory
-     * @return string
+     * @return ProcessorInterface[]
      */
-    public function getNamespace(): string;
+    public function getProcessors(): array;
 }

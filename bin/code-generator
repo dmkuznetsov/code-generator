@@ -10,7 +10,7 @@ foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php
 
 use Octava\CodeGenerator\CodeGenerator;
 use Octava\CodeGenerator\Configuration;
-use Octava\CodeGenerator\Writer;
+use Octava\CodeGenerator\Filesystem;
 use Octava\CodeGenerator\Processor\PhpClassProcessor;
 use Octava\CodeGenerator\Processor\SimpleProcessor;
 use Octava\CodeGenerator\TemplateFactory;
@@ -20,7 +20,7 @@ use PhpParser\PrettyPrinter\Standard;
 [$destinationPath, $templates, $templateVars, $templatesRoot, $namespace] = parseArgs(getopt('d:f:v:', ['namespace:', 'root:']));
 
 $configuration = new Configuration($destinationPath, $templates, $templateVars);
-$generator = new CodeGenerator($configuration, new Writer());
+$generator = new CodeGenerator($configuration, new Filesystem());
 $templates = $generator->scan(new TemplateFactory($configuration));
 $processors = [
     new SimpleProcessor(),
