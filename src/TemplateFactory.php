@@ -43,6 +43,7 @@ class TemplateFactory
                 '_CG_FILE_DIR_' => $dir,
                 '_CG_FILE_PATH_' => $dir.DIRECTORY_SEPARATOR.$filename,
                 '_CG_FILE_EXTENSION_' => $extension,
+                '_CG_FILE_NAMESPACE_' => str_replace('/', '\\', $dir),
             ],
             $this->configuration->getTemplateVars(),
             $templateVars

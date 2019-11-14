@@ -79,6 +79,7 @@ class TemplateFactoryTest extends TestCase
                 '_CG_FILE_DIR_' => 'path/to',
                 '_CG_FILE_PATH_' => 'path/to/table',
                 '_CG_FILE_EXTENSION_' => 'php',
+                '_CG_FILE_NAMESPACE_' => 'path\to',
                 '_CG_TEMPLATE_' => 'school',
                 '_CG_ROOT_' => 'home',
             ],

@@ -22,13 +22,15 @@ composer require octava/code-generator --dev
 
 `_CG_FILE_NAME_LCFIRST_` - имя файла с маленькой буквы (`testController` для файла `TestController.php`)
 
-`_CG_FILE_BASENAME_` => $basename  (`TestController` для файла `TestController.php`)
+`_CG_FILE_BASENAME_` => имя файла  (`TestController` для файла `TestController.php`)
 
-`_CG_FILE_DIR_` => $dir,
+`_CG_FILE_DIR_` => директория файла (`path/to/file` для файла `path/to/file/TestController.php`),
 
-`_CG_FILE_PATH_` => $dir.DIRECTORY_SEPARATOR.$filename,
+`_CG_FILE_PATH_` => путь к файлу без расширения (`path/to/file/TestController` для файла `path/to/file/TestController.php`),
 
 `_CG_FILE_EXTENSION_` - расширение файла (`php` для файла `TestController.php`)
+
+`_CG_FILE_NAMESPACE__` - расширение файла (`path\to\file` для файла `path/to/file/TestController.php`)
 
 
 ## Примеры использования
